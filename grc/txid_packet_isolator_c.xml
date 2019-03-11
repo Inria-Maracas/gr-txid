@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<block>
+  <name>packet_isolator_c</name>
+  <key>txid_packet_isolator_c</key>
+  <category>[txid]</category>
+  <import>import txid</import>
+  <make>txid.packet_isolator_c($payload_length, $preamble_length, $lookup_window, $tag_name)</make>
+  <param>
+    <name>Payload_length</name>
+    <key>payload_length</key>
+    <value>0</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Preamble_length</name>
+    <key>preamble_length</key>
+    <value> 80</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Lookup_window</name>
+    <key>lookup_window</key>
+    <value> 30</value>
+    <type>int</type>
+  </param>
+  <param>
+    <name>Tag_name</name>
+    <key>tag_name</key>
+    <value>"corr_est"</value>
+    <type>string</type>
+  </param>
+  <sink>
+    <name>in</name>
+    <type>complex</type>
+  </sink>
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+</block>

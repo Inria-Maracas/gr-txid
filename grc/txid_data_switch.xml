@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<block>
+  <name>data_switch</name>
+  <key>txid_data_switch</key>
+  <category>[txid]</category>
+  <import>import txid</import>
+  <make>txid.data_switch($tx_amount, $header_size, $payload_size, $to_server, $address, $port)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Tx amount</name>
+    <key>tx_amount</key>
+    <value>2</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Header size</name>
+    <key>header_size</key>
+    <value>380</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Payload size</name>
+    <key>payload_size</key>
+    <value>600</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Send to server</name>
+    <key>to_server</key>
+    <value>False</value>
+    <type>enum</type>
+    <option>
+      <name>No</name>
+      <key>False</key>
+    </option>
+    <option>
+      <name>Yes</name>
+      <key>True</key>
+    </option>
+  </param>
+
+  <param>
+    <name>Server IP</name>
+    <key>address</key>
+    <value>127.0.0.1</value>
+    <type>string</type>
+    <hide>#if $to_server then none else all#</hide>
+  </param>
+
+  <param>
+    <name>Server port</name>
+    <key>port</key>
+    <value>3581</value>
+    <type>int</type>
+    <hide>#if $to_server then none else all#</hide>
+  </param>
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>id</name>
+    <type>byte</type>
+  </sink>
+  <sink>
+    <name>frame</name>
+    <type>complex</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>complex</type>
+    <nports>$tx_amount</nports>
+  </source>
+</block>

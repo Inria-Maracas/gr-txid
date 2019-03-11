@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<block>
+  <name>udp_trigger</name>
+  <key>txid_udp_trigger</key>
+  <category>[txid]</category>
+  <import>import txid</import>
+  <make>txid.udp_trigger($tx_number,$ip,$port)</make>
+  <!-- Make one 'param' node for every Parameter you want settable from the GUI.
+       Sub-nodes:
+       * name
+       * key (makes the value accessible as $keyname, e.g. in the make node)
+       * type -->
+  <param>
+    <name>Tx Number</name>
+    <key>tx_number</key>
+    <type>int</type>
+  </param>
+  <param>
+    <name>IP address</name>
+    <key>ip</key>
+    <value>'127.0.0.1'</value>
+    <type>string</type>
+  </param>
+  <param>
+    <name>Port Number</name>
+    <key>port</key>
+    <type>int</type>
+  </param>
+
+  <!-- Make one 'sink' node per input. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <sink>
+    <name>in</name>
+    <type>message</type>
+  </sink>
+
+  <!-- Make one 'source' node per output. Sub-nodes:
+       * name (an identifier for the GUI)
+       * type
+       * vlen
+       * optional (set to 1 for optional inputs) -->
+  <source>
+    <name>out</name>
+    <type>message</type>
+  </source>
+</block>
