@@ -264,6 +264,7 @@ namespace gr {
         detection /= static_cast<float>(noutput_items);
         detection *= d_pfa;
       }
+      // Get average power over the sample window
       d_power = 0.000000000001;
       for (size_t index = 0; index < hist_len; index++) {
         d_power += d_mag[index]/d_symbols.size();
@@ -272,7 +273,7 @@ namespace gr {
       int isps = (int)(d_sps + 0.5f);
       int i = 0;
       while(i < noutput_items) {
-        d_power += d_mag[i + hist_len]/d_symbols.size();
+        d_power += d_mag[i + hist_len]/d_symbols.size(); // Sliding window
         d_power -= d_mag[i]/d_symbols.size();
         float corr_mag;
         switch (d_threshold_method) {

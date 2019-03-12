@@ -1,0 +1,119 @@
+# Example scenario description file
+#
+#   All lines starting with "#" and empty lines are ignored
+
+
+# Scenario textual description
+#   simple string (a one liner)
+description: Base scenario for TXid dataset generation
+
+# Experiment maximum duration
+#   Time after which the experiment is forced to stop
+#   integer (seconds)
+duration: 90
+
+# Node list
+#
+#   format:
+#
+#   (machine):
+#   entry (entry point script relative to the task root)
+#   exit (exit point script relative to the task root. Use "none" for none)
+
+nodes:
+
+  node1:
+    command: python scheduler.py
+    passive: true
+
+  node6:
+    command: emitter.py -T 0 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node4:
+    command: emitter.py -T 1 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node35:
+    command: emitter.py -T 2 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node7:
+    command: emitter.py -T 3 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node8:
+    command: emitter.py -T 4 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node9:
+    command: emitter.py -T 5 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node13:
+    command: emitter.py -T 6 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node14:
+    command: emitter.py -T 7 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node16:
+    command: emitter.py -T 8 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node17:
+    command: emitter.py -T 9 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node18:
+    command: emitter.py -T 10 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node23:
+    command: emitter.py -T 11 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node24:
+    command: emitter.py -T 12 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node25:
+    command: emitter.py -T 13 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node27:
+    command: emitter.py -T 14 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node28:
+    command: emitter.py -T 15 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node32:
+    command: emitter.py -T 16 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node33:
+    command: emitter.py -T 17 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node34:
+    command: emitter.py -T 18 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node37:
+    command: emitter.py -T 19 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  node38:
+    command: emitter.py -T 20 -P 3580 -G 8 -R 0 -f 2
+    passive: true
+
+  # node3:
+  #   command: emitter.py -T 00 -P 3580 -G 8 -R 0 -f 2
+  #   passive: true
+
+
+  # node6:
+    # command: reciever.py

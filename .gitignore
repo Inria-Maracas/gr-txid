@@ -1,2 +1,6 @@
 
 build/
+examples/src/include/
+examples/src/lib/
+examples/src/share/
+examples/src/tmp/
