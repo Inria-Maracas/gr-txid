@@ -57,10 +57,10 @@ A tag is placed at the beginning of each forwarded chunk, with an increasing ind
 
 ## How to build for use in a FIT/CorteXlab task:
 More info in : [GNU Radio Wiki](https://wiki.cortexlab.fr/doku.php?id=embedding_oot_modules_or_custom_libraries_binaries_in_minus_scenario)
-''''
+````
 cmake -DCMAKE_INSTALL_PREFIX=/home/cxlbuser/tasks/task ..
 make
 make DESTDIR=/<locationofthisfolder>/examples/src/tmp install
 mv /<locationofthisfolder>/examples/src/tmp/home/cxlbuser/tasks/task/* /<locationofthisfolder>/examples/src/
 rm -rf /<locationofthisfolder>/examples/src/tmp
-''''
+````
