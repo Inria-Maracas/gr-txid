@@ -1,4 +1,21 @@
-It is considered good practice to add examples in here to demonstrate the
-functionality of your OOT module. Python scripts, GRC flow graphs or other
-code can go here.
+# Important files for scenario definition
 
+## scheduler
+Defines the order of packets sent.
+Only the nodes present in node_list will send packets.
+If a node is present in the list but not actually active, everything will work fine, except that it will take longer to send the same amount of packets: the time slots occupied by that node will not be used by another.
+
+## scenario_src
+Base scenario file that will be modified by the createFolderAndFiles_usrp.py script.
+Used to define the run time of one experiment, afecting the amont of samples gathered.
+And also, by changing the arguments to the emitter commands sent to the nodes, define the type of data sent: Static, random or noise, Plain or Varying.
+
+
+## createFolderAndFiles_usrp
+Takes all the source files and generate task folders ready to be submitted to FIT/CorteXlab.
+Works over the list of involved nodes and replaces the command of the one chosen to be receiver by the proper command.
+The string line 28 needs to match the commands of the scenrario_src file.
+
+
+## generateData
+Bash script for creating the tasks, submitting them, waiting for them to end and dezipping the relevant result files in a proper folder.

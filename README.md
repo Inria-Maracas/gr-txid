@@ -44,10 +44,21 @@ A tag is placed at the beginning of each forwarded chunk, with an increasing ind
 
 
 
+
+## Usage with FIT/CorteXlab
+- Register to the [platform](https://wiki.cortexlab.fr/doku.php?id=start) and get familiar with it
+- Clone this repository somewhere in your airlock home
+- Create a build directory in the repository and, from there, build it (cf next section)
+- Book the testbed
+- Go to the example directory and modify the scenario, scheduler, create_folder and/or generateData files as needed to get the desired scenario
+- Run './generateData.sh'
+
+
+
 ## How to build for use in a FIT/CorteXlab task:
 More info in : [GNU Radio Wiki](https://wiki.cortexlab.fr/doku.php?id=embedding_oot_modules_or_custom_libraries_binaries_in_minus_scenario)
 ''''
-cmake -DCMAKE_INSTALL_PREFIX=/home/cxlbuser/tasks/task
+cmake -DCMAKE_INSTALL_PREFIX=/home/cxlbuser/tasks/task ..
 make
 make DESTDIR=/<locationofthisfolder>/examples/src/tmp install
 mv /<locationofthisfolder>/examples/src/tmp/home/cxlbuser/tasks/task/* /<locationofthisfolder>/examples/src/

@@ -401,5 +401,5 @@ namespace gr {
       return noutput_items;
     }
 
-  } /* namespace learning */
+  } /* namespace txid */
 } /* namespace gr */
