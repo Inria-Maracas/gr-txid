@@ -16,8 +16,8 @@ node_list = [6, 4, 35, 7, 8, 9, 13, 14, 16, 17, 18, 23, 24, 25, 27, 28, 32, 33, 
 
 # Dans la boucle ...
 # for i in range(1): 				#Mono Rx
-# for i in range(len(node_list)): 	#Multi Rx
-for i in [1]:
+for i in range(len(node_list)): 	#Multi Rx
+# for i in [1]:
 	print "Fichier ", str(node_list[i])
 	index = str(i)
 	if ( i < 10):
@@ -28,17 +28,17 @@ for i in [1]:
 	contenu = contenu_src.replace("emitter.py -T " + index + " -P 3580 -G 8 -R 0 -f 2", curr_command)
 
 
-	# Création du dossier
+	# Folder creation
 	folder = "node" + str(node_list[i]) + "/"
 	os.mkdir(folder)
 
-	# Ecriture du nouveau fichier
+	# Write new file
 	new_file = folder + "scenario.yaml"
 	fichier = open(new_file,"w")
 	fichier.write(contenu)
 	fichier.close()
 
-	# Copie des fichiers Tx et Rx
+	# Copy Tx and Rx files
 	string_file_tx = folder + "emitter.py"
 	string_file_rx = folder + "reciever.py"
 	string_file_sch = folder + "scheduler.py"
@@ -52,5 +52,5 @@ for i in [1]:
 	copytree("src/include", string_fold_inc)
 	copytree("src/share", string_fold_sha)
 
-	# Fin de la boucle
+	# At loop's end
 print "Fin."

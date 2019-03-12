@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>udp_trigger</name>
+  <name>UDP trigger</name>
   <key>txid_udp_trigger</key>
   <category>[txid]</category>
   <import>import txid</import>

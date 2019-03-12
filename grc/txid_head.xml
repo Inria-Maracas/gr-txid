@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>head</name>
+  <name>Head</name>
   <key>txid_head</key>
   <category>[txid]</category>
   <import>import txid</import>

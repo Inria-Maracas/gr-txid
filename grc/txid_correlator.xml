@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>correlator</name>
+  <name>Correlator</name>
   <key>txid_correlator</key>
   <category>[txid]</category>
   <import>import txid</import>
-  <make>txid.correlator(($symbols, $sps, $mark_delay, $threshold)</make>
+  <make>txid.correlator($symbols, $sps, $mark_delay, $threshold)</make>
   <callback>set_mark_delay($mark_delay)</callback>
   <callback>set_threshold($threshold)</callback>
 

@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Emitter
-# Generated: Tue Dec 11 09:45:32 2018
+# Generated: Tue Mar 12 15:30:14 2019
 ##################################################
 
 def struct(data): return type('Struct', (object,), data)()
@@ -17,20 +17,21 @@ from gnuradio.eng_option import eng_option
 from gnuradio.filter import firdes
 from grc_gnuradio import blks2 as grc_blks2
 from optparse import OptionParser
-import learning
 import numpy
 import time
+import txid
 
 
 class emitter(gr.top_block):
 
-    def __init__(self, gain_freq=2, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, space_between_packets=200, tx_id=0, usrp_tx_gain=3, zeros_offset=100004, is_noise=0):
+    def __init__(self, gain_freq=2, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
         gr.top_block.__init__(self, "Emitter")
 
         ##################################################
         # Parameters
         ##################################################
         self.gain_freq = gain_freq
+        self.is_noise = is_noise
         self.is_random_source = is_random_source
         self.max_gain = max_gain
         self.min_gain = min_gain
@@ -40,15 +41,12 @@ class emitter(gr.top_block):
         self.space_between_packets = space_between_packets
         self.tx_id = tx_id
         self.usrp_tx_gain = usrp_tx_gain
-        self.zeros_offset = zeros_offset
-        self.is_noise = is_noise
 
         ##################################################
         # Variables
         ##################################################
         self.preamble = preamble = (0, 1.00000000000000 + 0.00000000000000j, -0.0198821876650702 - 0.999802329770066j, 0.0596151251698190 + 0.998221436781933j, -0.992892073701974 + 0.119018191801903j, -0.980297366804636 + 0.197527397177953j, 0.293850274337919 + 0.955851461405761j, -0.405525320812986 - 0.914083811354038j, 0.848983362091364 - 0.528419578452620j, 0.754564620158230 - 0.656225749270376j, -0.780057308185211 - 0.625708075660561j, 0.888282612749130 + 0.459297289222982j, -0.255616632440464 + 0.966778225458040j, -0.0198821876650804 + 0.999802329770065j, 0.971669340040416 - 0.236344438532879j, -0.869320274439587 + 0.494249188616716j, -0.727878810369485 - 0.685705795086423j, -0.905840393665518 - 0.423619146408540j, -0.0992537989080696 + 0.995062150522427j, -0.255616632440477 - 0.966778225458036j, 0.804316565270771 - 0.594201028971703j, 0.511435479103437 - 0.859321680579653j, -0.992892073701971 - 0.119018191801923j, 0.949820131727787 - 0.312796607022213j, 0.700042074569421 + 0.714101599096754j, 0.949820131727768 + 0.312796607022273j, -0.177997895677522 - 0.984030867978426j, 0.641093637592130 + 0.767462668693983j, -0.331619278552096 + 0.943413299722125j, 0.216978808106213 + 0.976176314419074j, 0.700042074569433 - 0.714101599096743j, -0.177997895677626 + 0.984030867978407j, -0.905840393665558 + 0.423619146408453j, -0.476867501428628 + 0.878975190822367j, 0.987375341936355 - 0.158398024407083j, -0.671098428359002 + 0.741368261698650j, -0.999209397227295 - 0.0397565150970890j, -0.780057308185194 + 0.625708075660582j, 0.987375341936324 + 0.158398024407273j, -0.827304032543040 + 0.561754428320796j, -0.980297366804605 - 0.197527397178109j, -0.827304032543027 + 0.561754428320816j, 0.987375341936332 + 0.158398024407226j, -0.780057308185292 + 0.625708075660460j, -0.999209397227299 - 0.0397565150969950j, -0.671098428359083 + 0.741368261698577j, 0.987375341936350 - 0.158398024407110j, -0.476867501428484 + 0.878975190822446j, -0.905840393665478 + 0.423619146408624j, -0.177997895677642 + 0.984030867978404j, 0.700042074569508 - 0.714101599096669j, 0.216978808106132 + 0.976176314419092j, -0.331619278552151 + 0.943413299722105j, 0.641093637592190 + 0.767462668693933j, -0.177997895677511 - 0.984030867978428j, 0.949820131727754 + 0.312796607022316j, 0.700042074569284 + 0.714101599096888j, 0.949820131727893 - 0.312796607021891j, -0.992892073701961 - 0.119018191802010j, 0.511435479103736 - 0.859321680579474j, 0.804316565270626 - 0.594201028971898j, -0.255616632440350 - 0.966778225458070j, -0.0992537989081486 + 0.995062150522419j, -0.905840393665482 - 0.423619146408617j, -0.727878810369385 - 0.685705795086529j, -0.869320274439717 + 0.494249188616486j, 0.971669340040621 - 0.236344438532038j, -0.0198821876652695 + 0.999802329770062j, -0.255616632440926 + 0.966778225457918j, 0.888282612749188 + 0.459297289222869j, -0.780057308185057 - 0.625708075660753j, 0.754564620158670 - 0.656225749269870j, 0.848983362091728 - 0.528419578452034j, -0.405525320812299 - 0.914083811354343j, 0.293850274337947 + 0.955851461405753j, -0.980297366804665 + 0.197527397177809j, -0.992892073702018 + 0.119018191801536j, 0.0596151251691726 + 0.998221436781972j, -0.0198821876650031 - 0.999802329770067j, 1.00000000000000 + 4.46840285540623e-13j)
         self.sizes = sizes = struct({'zpad': 3000, 'preamble': len(preamble), 'preambleGuard': 40, 'header': 320, 'headerGuard': 100, 'payload': 560, 'payloadGuard': space_between_packets, })
-        self.symb_rate = symb_rate = 1250000*2
         self.samp_rate = samp_rate = 5000000
         self.full_header = full_header = sizes.zpad+sizes.preamble+sizes.preambleGuard+ sizes.header + sizes.headerGuard
         self.excess_bw = excess_bw = 0.350
@@ -70,15 +68,15 @@ class emitter(gr.top_block):
         self.uhd_usrp_sink_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_sink_0.set_gain(usrp_tx_gain, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
+        self.txid_udp_trigger_0 = txid.udp_trigger(tx_id,'0.0.0.0',port)
+        self.txid_head_0 = txid.head(gr.sizeof_gr_complex*1, full_header, True)
         self.preamble_vect = blocks.vector_source_c(preamble, True, 1, [])
-        self.learning_udp_trigger_0 = learning.udp_trigger(tx_id,'0.0.0.0',port)
-        self.learning_head_0 = learning.head(gr.sizeof_gr_complex*1, full_header, True)
         self.digital_psk_mod_1 = digital.psk.psk_mod(
           constellation_points=4,
           mod_code="gray",
           differential=True,
-          samples_per_symbol=samp_rate/symb_rate,
-          excess_bw=0.35,
+          samples_per_symbol=2,
+          excess_bw=excess_bw,
           verbose=False,
           log=False,
           )
@@ -131,8 +129,8 @@ class emitter(gr.top_block):
         ##################################################
         # Connections
         ##################################################
-        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.learning_udp_trigger_0, 'in'))
-        self.msg_connect((self.learning_udp_trigger_0, 'out'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))
+        self.msg_connect((self.blocks_tagged_stream_to_pdu_0, 'pdus'), (self.txid_udp_trigger_0, 'in'))
+        self.msg_connect((self.txid_udp_trigger_0, 'out'), (self.blocks_pdu_to_tagged_stream_0, 'pdus'))
         self.connect((self.analog_noise_source_x_0, 0), (self.blks2_selector_0_0, 0))
         self.connect((self.analog_random_source_x_0, 0), (self.blks2_selector_0, 0))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
@@ -150,14 +148,14 @@ class emitter(gr.top_block):
         self.connect((self.blocks_stream_mux_3, 0), (self.blocks_stream_to_tagged_stream_0_0, 0))
         self.connect((self.blocks_stream_mux_4, 0), (self.blocks_tagged_stream_multiply_length_0, 0))
         self.connect((self.blocks_stream_to_tagged_stream_0, 0), (self.digital_ofdm_tx_0, 0))
-        self.connect((self.blocks_stream_to_tagged_stream_0_0, 0), (self.learning_head_0, 0))
+        self.connect((self.blocks_stream_to_tagged_stream_0_0, 0), (self.txid_head_0, 0))
         self.connect((self.blocks_tagged_stream_multiply_length_0, 0), (self.uhd_usrp_sink_0, 0))
         self.connect((self.blocks_vector_source_x_0_0, 0), (self.blks2_selector_0, 1))
         self.connect((self.blocks_vector_source_x_0_0_0, 0), (self.blocks_stream_to_tagged_stream_0, 0))
         self.connect((self.digital_ofdm_tx_0, 0), (self.blocks_multiply_const_xx_0, 0))
         self.connect((self.digital_psk_mod_1, 0), (self.blks2_selector_0_0, 1))
-        self.connect((self.learning_head_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))
         self.connect((self.preamble_vect, 0), (self.blocks_stream_mux_3, 1))
+        self.connect((self.txid_head_0, 0), (self.blocks_tagged_stream_to_pdu_0, 0))
 
     def get_gain_freq(self):
         return self.gain_freq
@@ -165,6 +163,13 @@ class emitter(gr.top_block):
     def set_gain_freq(self, gain_freq):
         self.gain_freq = gain_freq
         self.analog_sig_source_x_0_0.set_frequency(self.gain_freq)
+
+    def get_is_noise(self):
+        return self.is_noise
+
+    def set_is_noise(self, is_noise):
+        self.is_noise = is_noise
+        self.blks2_selector_0_0.set_input_index(int(0 if (self.is_noise) else 1))
 
     def get_is_random_source(self):
         return self.is_random_source
@@ -227,19 +232,6 @@ class emitter(gr.top_block):
         self.uhd_usrp_sink_0.set_gain(self.usrp_tx_gain, 0)
 
 
-    def get_zeros_offset(self):
-        return self.zeros_offset
-
-    def set_zeros_offset(self, zeros_offset):
-        self.zeros_offset = zeros_offset
-
-    def get_is_noise(self):
-        return self.is_noise
-
-    def set_is_noise(self, is_noise):
-        self.is_noise = is_noise
-        self.blks2_selector_0_0.set_input_index(int(0 if (self.is_noise) else 1))
-
     def get_preamble(self):
         return self.preamble
 
@@ -252,12 +244,6 @@ class emitter(gr.top_block):
 
     def set_sizes(self, sizes):
         self.sizes = sizes
-
-    def get_symb_rate(self):
-        return self.symb_rate
-
-    def set_symb_rate(self, symb_rate):
-        self.symb_rate = symb_rate
 
     def get_samp_rate(self):
         return self.samp_rate
@@ -272,7 +258,7 @@ class emitter(gr.top_block):
 
     def set_full_header(self, full_header):
         self.full_header = full_header
-        self.learning_head_0.set_length(self.full_header)
+        self.txid_head_0.set_length(self.full_header)
         self.blocks_tagged_stream_multiply_length_0.set_scalar((self.full_header+sizes.payload + sizes.payloadGuard)/float(self.full_header))
         self.blocks_stream_to_tagged_stream_0_0.set_packet_len(self.full_header)
         self.blocks_stream_to_tagged_stream_0_0.set_packet_len_pmt(self.full_header)
@@ -296,6 +282,9 @@ def argument_parser():
     parser.add_option(
         "-f", "--gain-freq", dest="gain_freq", type="eng_float", default=eng_notation.num_to_str(2),
         help="Set gain_frequency [default=%default]")
+    parser.add_option(
+        "-r", "--is-noise", dest="is_noise", type="intx", default=0,
+        help="Set is_noise [default=%default]")
     parser.add_option(
         "-R", "--is-random-source", dest="is_random_source", type="intx", default=0,
         help="Set is_random_source [default=%default]")
@@ -323,12 +312,6 @@ def argument_parser():
     parser.add_option(
         "-G", "--usrp-tx-gain", dest="usrp_tx_gain", type="intx", default=3,
         help="Set gain [default=%default]")
-    parser.add_option(
-        "-O", "--zeros-offset", dest="zeros_offset", type="intx", default=100004,
-        help="Set zeros_offset [default=%default]")
-    parser.add_option(
-        "-r", "--is-noise", dest="is_noise", type="intx", default=0,
-        help="Set is_noise [default=%default]")
     return parser
 
 
@@ -336,7 +319,7 @@ def main(top_block_cls=emitter, options=None):
     if options is None:
         options, _ = argument_parser().parse_args()
 
-    tb = top_block_cls(gain_freq=options.gain_freq, is_random_source=options.is_random_source, max_gain=options.max_gain, min_gain=options.min_gain, nb_packets=options.nb_packets, packet_len=options.packet_len, port=options.port, space_between_packets=options.space_between_packets, tx_id=options.tx_id, usrp_tx_gain=options.usrp_tx_gain, zeros_offset=options.zeros_offset, is_noise=options.is_noise)
+    tb = top_block_cls(gain_freq=options.gain_freq, is_noise=options.is_noise, is_random_source=options.is_random_source, max_gain=options.max_gain, min_gain=options.min_gain, nb_packets=options.nb_packets, packet_len=options.packet_len, port=options.port, space_between_packets=options.space_between_packets, tx_id=options.tx_id, usrp_tx_gain=options.usrp_tx_gain)
     tb.start()
     try:
         raw_input('Press Enter to quit: ')

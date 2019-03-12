@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>packet_isolator_c</name>
+  <name>Packet isolator</name>
   <key>txid_packet_isolator_c</key>
   <category>[txid]</category>
   <import>import txid</import>

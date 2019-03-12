@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <block>
-  <name>data_switch</name>
+  <name>Header based switch</name>
   <key>txid_data_switch</key>
   <category>[txid]</category>
   <import>import txid</import>
