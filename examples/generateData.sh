@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NB_NOEUDS=1
+NB_NOEUDS=21
 node_list=( 6 4 35 7 8 9 13 14 16 17 18 23 24 25 27 28 32 33 34 37 38 )
 # Création des fichiers et dossiers
 echo "Files and folders creation"

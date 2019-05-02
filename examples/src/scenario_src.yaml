@@ -10,7 +10,7 @@ description: Base scenario for TXid dataset generation
 # Experiment maximum duration
 #   Time after which the experiment is forced to stop
 #   integer (seconds)
-duration: 30
+duration: 60
 
 # Node list
 #
@@ -113,7 +113,3 @@ nodes:
   # node3:
   #   command: emitter.py -T 00 -P 3580 -G 8 -R 0 -f 2
   #   passive: true
-
-
-  # node6:
-    # command: reciever.py

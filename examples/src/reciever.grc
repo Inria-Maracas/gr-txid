@@ -6300,7 +6300,7 @@
     </param>
     <param>
       <key>clock_source0</key>
-      <value>external</value>
+      <value>internal</value>
     </param>
     <param>
       <key>sd_spec0</key>

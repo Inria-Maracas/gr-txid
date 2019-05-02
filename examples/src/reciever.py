@@ -3,7 +3,7 @@
 ##################################################
 # GNU Radio Python Flow Graph
 # Title: Reciever
-# Generated: Tue Mar 12 16:22:55 2019
+# Generated: Thu May  2 15:22:46 2019
 ##################################################
 
 from gnuradio import blocks
@@ -49,7 +49,7 @@ class reciever(gr.top_block):
         		channels=range(1),
         	),
         )
-        self.uhd_usrp_source_0.set_clock_source('external', 0)
+        self.uhd_usrp_source_0.set_clock_source('internal', 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_source_0.set_gain(usrp_rx_gain, 0)

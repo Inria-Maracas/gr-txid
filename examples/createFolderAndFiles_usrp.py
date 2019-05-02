@@ -15,9 +15,9 @@ command = "reciever.py -R re_00 -I im_00"
 node_list = [6, 4, 35, 7, 8, 9, 13, 14, 16, 17, 18, 23, 24, 25, 27, 28, 32, 33, 34, 37, 38] 		#Multi Rx
 
 # Dans la boucle ...
-# for i in range(1): 				#Mono Rx
+# for i in [1]:						#Mono Rx
 for i in range(len(node_list)): 	#Multi Rx
-# for i in [1]:
+
 	print "Fichier ", str(node_list[i])
 	index = str(i)
 	if ( i < 10):
