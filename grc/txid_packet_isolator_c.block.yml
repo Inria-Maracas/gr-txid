@@ -1,0 +1,33 @@
+id: txid_packet_isolator_c
+label: packet isolator c
+category: '[Txid]'
+templates:
+  imports: from gnuradio import txid
+  make: txid.packet_isolator_c(${payload_length}, ${preamble_length}, ${lookup_window},
+    ${tag_name})
+parameters:
+- id: payload_length
+  label: Payload_length
+  default: '0'
+  dtype: int
+- id: preamble_length
+  label: Preamble_length
+  default: ' 80'
+  dtype: int
+- id: lookup_window
+  label: Lookup_window
+  default: ' 30'
+  dtype: int
+- id: tag_name
+  label: Tag_name
+  default: "corr_est"
+  dtype: string
+inputs:
+- label: in
+  domain: stream
+  dtype: complex
+outputs:
+- label: out
+  domain: stream
+  dtype: complex
+file_format: 1

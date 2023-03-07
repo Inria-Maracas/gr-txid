@@ -1,0 +1,37 @@
+id: txid_correlator
+label: correlator
+category: '[Txid]'
+
+parameters:
+-   id: symbols
+    label: Symbols
+    dtype: complex_vector
+-   id: sps
+    label: Samples per Symbol
+    dtype: float
+-   id: mark_delay
+    label: Tag marking delay
+    dtype: int
+-   id: threshold
+    label: Threshold
+    dtype: float
+    default: '0.9'
+-   id: threshold_method
+    label: Threshold Method
+    dtype: enum
+    options: [digital.THRESHOLD_ABSOLUTE, digital.THRESHOLD_DYNAMIC]
+    option_labels: [Absolute, Dynamic]
+
+inputs:
+-   domain: stream
+    dtype: complex
+
+outputs:
+-   domain: stream
+    dtype: complex
+-   label: corr
+    domain: stream
+    dtype: complex
+    optional: true
+
+file_format: 1

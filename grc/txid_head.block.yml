@@ -1,0 +1,51 @@
+id: txid_head
+label: Head
+category: '[Txid]'
+
+templates:
+  imports: from gnuradio import txid
+  make: txid.head(${type.size}*${vlen}, ${nitems}, ${blocking})
+  callbacks:
+  - set_length(${num_items})
+  - set_blocking(${blocking})
+    
+parameters:
+- id: type
+  label: Type
+  dtype: enum
+  options: [complex, float, int, short, byte]
+  option_attributes:
+      size: [gr.sizeof_gr_complex, gr.sizeof_float, gr.sizeof_int, gr.sizeof_short,
+          gr.sizeof_char]
+  hide: part
+- id: num_items
+  label: Num Items
+  dtype: int
+  default: '1024'
+- id: vlen
+  label: Vector Length
+  dtype: int
+  default: '1'
+  hide: ${ 'part' if vlen == 1 else 'none' }
+- id: blocking
+  label: Blocking
+  dtype: bool
+  default: 'True'
+  options: ['True', 'False']
+  option_labels: [Yes, No]
+
+
+asserts:
+- ${ vlen > 0 }
+
+inputs:
+- domain: stream
+  dtype: ${ type }
+  vlen: ${ vlen }
+
+outputs:
+- domain: stream
+  dtype: ${ type }
+  vlen: ${ vlen }
+  optional: true
+file_format: 1
