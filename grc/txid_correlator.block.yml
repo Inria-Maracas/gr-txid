@@ -34,4 +34,12 @@ outputs:
     dtype: complex
     optional: true
 
+templates:
+    imports: from gnuradio import txid
+    make: txid.correlator(${symbols}, ${sps}, ${mark_delay}, ${threshold}, ${threshold_method})
+    callbacks:
+    - set_mark_delay(${mark_delay})
+    - set_threshold(${threshold})
+
+
 file_format: 1

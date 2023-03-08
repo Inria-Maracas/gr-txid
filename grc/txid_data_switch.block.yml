@@ -1,10 +1,10 @@
 id: txid_data_switch
 label: Header based switch
-category: '[txid]'
+category: '[Txid]'
 
 templates:
   imports: from gnuradio import txid
-  make: txid.data_switch(${tx_amount}, ${header_size}, ${payload_size}, ${to_network}, ${address}, ${port})
+  make: txid.data_switch(${tx_amount}, ${header_size}, ${payload_size}, ${to_server}, ${address}, ${port})
 
 #  Make one 'parameters' list entry for every parameter you want settable from the GUI.
 #     Keys include:

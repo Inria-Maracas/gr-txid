@@ -35,7 +35,7 @@ class data_switch(gr.basic_block):
         self.payload_size = payload_size
         self.block_size = header_size+payload_size
         self.set_output_multiple(self.payload_size)
-        self.set_tag_propagation_policy(0)
+        self.set_tag_propagation_policy(gr.TPP_DONT)
         self.header_byte_length = 5
         self.last_called = float("inf")
         self.max_wait_time = 0.01
@@ -48,10 +48,12 @@ class data_switch(gr.basic_block):
             self.addr = address
             self.port = port
 
-    def forecast(self, noutput_items, ninput_items_required):
+    def forecast(self, noutput_items, ninputs):
         # setup size of input_items[i] for work call
+        ninput_items_required = list(np.zeros(ninputs))
         ninput_items_required[0] = 0#self.header_byte_length
         ninput_items_required[1] = self.block_size
+        return ninput_items_required
 
     def vote(self, data):
         """Returns the most present value in the input array"""
@@ -69,13 +71,13 @@ class data_switch(gr.basic_block):
         tags0 = self.get_tags_in_window(0,  0 , self.header_byte_length, pmt.intern("header_start"))
         tags1 = self.get_tags_in_window(1,  0 , self.block_size, pmt.intern("header_start"))
         if len(input_items[0]) < self.header_byte_length:
-            #print("Not enough input")
-            if time.clock() - self.last_called > self.max_wait_time:
+            # print("Not enough input")
+            if time.time() - self.last_called > self.max_wait_time:
                 # print("Wait too long, consuming")
                 self.consume(1, self.block_size)
                 self.last_called = float("inf")
             if self.last_called == float("inf"):
-                self.last_called = time.clock()
+                self.last_called = time.time()
             time.sleep(0.001)
             return 0
         self.last_called = float("inf")

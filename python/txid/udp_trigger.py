@@ -45,32 +45,44 @@ class udp_trigger(gr.sync_block):
             return
         self.once = True
         self.message_buffer = msg
-        print(msg)
+        # print(msg)
         print("Thread")
         # initialize a socket, think of it as a cable
         # SOCK_DGRAM specifies that this is UDP
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
         self.s.bind((self.ip_addr,self.port))
         print("Listening")
+        # while 1: # Reception loop
+        #     data = self.s.recv(1024)
+        #     number = struct.unpack('B',data)[0]
+        #     if number != self.tx_number:
+        #         print(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
+        #         continue
+        #     if self.message_buffer is not None:
+        #         print("sending",number)
+        #         self.message_port_pub(pmt.intern("out"),self.message_buffer)
+        
+        self.socket_thread = threading.Thread(target=self.handle_packet)
+        self.socket_thread.daemon = True
+        self.socket_thread.start()
+
+
+
+    def handle_packet(self):
         while 1: # Reception loop
             data = self.s.recv(1024)
             number = struct.unpack('B',data)[0]
             if number != self.tx_number:
-                print("Wrong target")
+                print(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
                 continue
             if self.message_buffer is not None:
                 print("sending",number)
                 self.message_port_pub(pmt.intern("out"),self.message_buffer)
-
-
-
+   
     def __exit__(self, exc_type, exc_value, traceback):
         # print("Exit")
         self.s.close() #Close socket
-
-    # def handle_packet(self):
-    #     pass
-
+        
 
     def work(self, input_items, output_items):
         """example: multiply with constant"""

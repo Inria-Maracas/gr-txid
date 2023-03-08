@@ -1,6 +1,6 @@
 id: txid_udp_trigger
 label: UDP trigger
-category: '[txid]'
+category: '[Txid]'
 
 templates:
   imports: from gnuradio import txid
@@ -16,7 +16,7 @@ parameters:
 - id: tx_number
   label: Tx Number
   dtype: int
-- id: ip
+- id: ip_addr
   label: IP address
   dtype: string
   default: '127.0.0.1'

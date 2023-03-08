@@ -24,7 +24,7 @@ if(NOT txid_sources)
 endif(NOT txid_sources)
 
 add_library(gnuradio-txid SHARED ${txid_sources})
-target_link_libraries(gnuradio-txid gnuradio::gnuradio-runtime)
+target_link_libraries(gnuradio-txid gnuradio::gnuradio-runtime gnuradio::gnuradio-filter)
 target_include_directories(gnuradio-txid
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<INSTALL_INTERFACE:include>
