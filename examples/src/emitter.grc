@@ -343,7 +343,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 836.0]
+    coordinate: [584, 844.0]
     rotation: 0
     state: enabled
 - name: blocks_float_to_complex_0

@@ -107,7 +107,7 @@ class emitter(gr.top_block):
             ),
             "packet_len",
         )
-        self.uhd_usrp_sink_0.set_clock_source('external', 0)
+        self.uhd_usrp_sink_0.set_clock_source('internal', 0)
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
         self.uhd_usrp_sink_0.set_time_unknown_pps(uhd.time_spec(0))
 
@@ -173,8 +173,8 @@ class emitter(gr.top_block):
         self.msg_connect((self.txid_udp_trigger_0, 'out'), (self.pdu_pdu_to_tagged_stream_0, 'pdus'))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_selector_0, 0))
         self.connect((self.analog_random_uniform_source_x_0, 0), (self.blocks_selector_1, 0))
-        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.blocks_float_to_complex_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_stream_mux_3, 3))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_mux_4, 1))
