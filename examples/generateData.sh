@@ -18,7 +18,7 @@ done
 
 # Création des fichiers et dossiers
 echo "Files and folders creation"
-python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "notou/gr-txid-cxlb:0.1
+python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "notou/gr-txid-cxlb:0.1"
 
 # Création des tâches
 echo "Tasks creation and submission"
@@ -40,16 +40,20 @@ rm -rf node[1-9]*
 
 # Attente que les tâches soient terminées
 echo "Wait for tasks to finish"
-result=$(date +"%Y%m%d_%Hh%M")
 loop=True
-value=$(minus testbed status | grep "(none)" | wc -l)
 while [ $loop = 'True' ]
 do
-	if [ $value = '1' ]
+	waiting=$(minus testbed status | grep "waiting: 0" | wc -l)
+	value=$(minus testbed status | grep "(none)" | wc -l)
+	id=$(minus testbed status | grep "<Task.*$" | sed 's/^.*id=\([0-9]*\),.*$/\1/')
+
+	if [ $value = '1' ] && [ $waiting = '1' ]
 	then loop=False
 	else sleep 10 && echo "."
 	fi
-	value=$(minus testbed status | grep "(none)" | wc -l)
+	if [ "$id" -ge "$NUM_LAST_TASK" ]
+	then loop=False
+	fi
 done
 echo "Tasks finished"
 
