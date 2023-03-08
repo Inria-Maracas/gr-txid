@@ -18,8 +18,7 @@ done
 
 # Création des fichiers et dossiers
 echo "Files and folders creation"
-# echo createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "m1mbert/cxlb-gnuradio-3.8:1.0"
-python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "m1mbert/cxlb-gnuradio-3.8:1.0"
+python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "notou/gr-txid-cxlb:0.1
 
 # Création des tâches
 echo "Tasks creation and submission"
