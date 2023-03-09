@@ -452,7 +452,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    lengths: zpad, preamble_len, preamble_guard_len, header_len, header_guard_len
+    lengths: '[zpad, preamble_len, preamble_guard_len, header_len, header_guard_len]'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '5'
@@ -471,7 +471,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    lengths: full_header, payload_len, payload_guard_len
+    lengths: '[full_header, payload_len, payload_guard_len]'
     maxoutbuf: '0'
     minoutbuf: '0'
     num_inputs: '3'
