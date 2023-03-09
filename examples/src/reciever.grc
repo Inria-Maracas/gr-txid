@@ -1294,14 +1294,14 @@ blocks:
     log: 'False'
     maxoutbuf: '0'
     minoutbuf: '0'
-    occupied_carriers: ()
+    occupied_carriers: ''
     packet_len_key: '"rx_len"'
     payload_mod: '"QPSK"'
-    pilot_carriers: ()
-    pilot_symbols: ()
+    pilot_carriers: ''
+    pilot_symbols: ''
     scramble_bits: 'False'
-    sync_word1: ()
-    sync_word2: ()
+    sync_word1: ''
+    sync_word2: ''
   states:
     bus_sink: false
     bus_source: false

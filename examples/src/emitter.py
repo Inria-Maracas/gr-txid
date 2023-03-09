@@ -127,11 +127,6 @@ class emitter(gr.top_block):
             fft_len=64,
             cp_len=16,
             packet_length_tag_key='length',
-            occupied_carriers=(),
-            pilot_carriers=(),
-            pilot_symbols=(),
-            sync_word1=(),
-            sync_word2=(),
             bps_header=1,
             bps_payload=2,
             rolloff=0,
@@ -173,8 +168,8 @@ class emitter(gr.top_block):
         self.msg_connect((self.txid_udp_trigger_0, 'out'), (self.pdu_pdu_to_tagged_stream_0, 'pdus'))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_selector_0, 0))
         self.connect((self.analog_random_uniform_source_x_0, 0), (self.blocks_selector_1, 0))
-        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.blocks_float_to_complex_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_stream_mux_3, 3))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_mux_4, 1))

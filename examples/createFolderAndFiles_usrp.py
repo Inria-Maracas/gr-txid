@@ -30,7 +30,7 @@ for tx_node in tx_nodes:
 tx_node_string = tx_node_string[:-1]
 
 NUM_NODES = 40
-docker_img_string = "m1mbert/cxlb-gnuradio-3.8:1.0"
+docker_img_string = args.docker_img
 default_gain = 8
 pow_var_speed = 2
 
@@ -45,14 +45,14 @@ for rx_idx, rx in enumerate(rx_nodes):
 			yaml_content += f"  node{node_id}:\n"
 			yaml_content +=  "    container:\n"
 			yaml_content += f"    - image: {docker_img_string}\n"
-			yaml_content += f"      command: /root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {len(tx_nodes)}\n\n"  # TODO Add num samples to save?
+			yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {len(tx_nodes)}\"\n\n"  # TODO Add num samples to save?
 			continue
 
 		if node_id == args.sched_node: # TODO Allow scheduler to run on a Tx or Rx node?
 			yaml_content += f"  node{node_id}:\n"
 			yaml_content +=  "    container:\n"
 			yaml_content += f"    - image: {docker_img_string}\n"
-			yaml_content += f"      command: /root/gr-txid/examples/src/scheduler.py -p {args.port_num} -s {args.tx_freq} -n {tx_node_string}\n"
+			yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/scheduler.py -p {args.port_num} -s {args.tx_freq} -n {tx_node_string}\"\n"
 			yaml_content +=  "    passive: true\n\n"
 			continue
 		
@@ -60,7 +60,7 @@ for rx_idx, rx in enumerate(rx_nodes):
 			yaml_content += f"  node{node_id}:\n"
 			yaml_content +=  "    container:\n"
 			yaml_content += f"    - image: {docker_img_string}\n"
-			yaml_content += f"      command: /root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -G {default_gain} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\n"
+			yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -G {default_gain} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\"\n"
 			yaml_content +=  "    passive: true\n\n"
 	
 	# Folder creation
