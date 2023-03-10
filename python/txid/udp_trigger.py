@@ -52,15 +52,15 @@ class udp_trigger(gr.sync_block):
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
         self.s.bind((self.ip_addr,self.port))
         print("Listening")
-        # while 1: # Reception loop
-        #     data = self.s.recv(1024)
-        #     number = struct.unpack('B',data)[0]
-        #     if number != self.tx_number:
-        #         print(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
-        #         continue
-        #     if self.message_buffer is not None:
-        #         print("sending",number)
-        #         self.message_port_pub(pmt.intern("out"),self.message_buffer)
+        while 1: # Reception loop
+            data = self.s.recv(1024)
+            number = struct.unpack('B',data)[0]
+            if number != self.tx_number:
+                print(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
+                continue
+            if self.message_buffer is not None:
+                print("sending",number)
+                self.message_port_pub(pmt.intern("out"),self.message_buffer)
         
         self.socket_thread = threading.Thread(target=self.handle_packet)
         self.socket_thread.daemon = True
@@ -73,6 +73,7 @@ class udp_trigger(gr.sync_block):
             data = self.s.recv(1024)
             number = struct.unpack('B',data)[0]
             if number != self.tx_number:
+                
                 print(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
                 continue
             if self.message_buffer is not None:
