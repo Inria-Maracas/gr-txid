@@ -37,7 +37,7 @@ while True:
     node = nodes[node_index]
 
     PACKETDATA = np.uint8(node_index)
-    # IPADDR = ip_base+str(node)
+    IPADDR = ip_base+str(node)
 
     try:
         # send the command
