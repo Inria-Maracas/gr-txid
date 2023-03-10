@@ -41,9 +41,10 @@ while True:
 
     try:
         # send the command
+        print(f"sending packet containing {PACKETDATA} to {IPADDR}:{PORTNUM}")
         s.sendto(PACKETDATA, (IPADDR, PORTNUM))
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
     #Wait a bit to sent next order
     time.sleep(SLEEP_TIME)
