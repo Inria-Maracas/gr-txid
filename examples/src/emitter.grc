@@ -956,7 +956,7 @@ blocks:
     affinity: ''
     alias: ''
     comment: ''
-    ip_addr: 127.0.0.1
+    ip_addr: 0.0.0.0
     maxoutbuf: '0'
     minoutbuf: '0'
     port: port

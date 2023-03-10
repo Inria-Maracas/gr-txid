@@ -114,7 +114,7 @@ class emitter(gr.top_block):
         self.uhd_usrp_sink_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_sink_0.set_gain(usrp_tx_gain, 0)
-        self.txid_udp_trigger_0 = txid.udp_trigger(tx_id, '127.0.0.1', port)
+        self.txid_udp_trigger_0 = txid.udp_trigger(tx_id, '0.0.0.0', port)
         self.txid_head_0 = txid.head(gr.sizeof_gr_complex*1, full_header, True)
         self.preamble_vect = blocks.vector_source_c(preamble, True, 1, [])
         self.pdu_tagged_stream_to_pdu_0 = pdu.tagged_stream_to_pdu(gr.types.complex_t, 'packet_len')
