@@ -47,6 +47,9 @@ class data_switch(gr.basic_block):
             self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, 0)
             self.addr = address
             self.port = port
+        
+        self.log = gr.logger(self.alias())
+        self.log.info("Init")
 
     def forecast(self, noutput_items, ninputs):
         # setup size of input_items[i] for work call
@@ -91,7 +94,7 @@ class data_switch(gr.basic_block):
             self.consume(1, self.block_size)
             return 0
 
-        print(pmt.to_python(tags0[0].value), pmt.to_python(tags1[0].value))
+        self.log.info(pmt.to_python(tags0[0].value), pmt.to_python(tags1[0].value))
         if pmt.to_python(tags0[0].value) < pmt.to_python(tags1[0].value):
             # print("Decoded late")
             self.consume(0,self.header_byte_length)
@@ -112,7 +115,7 @@ class data_switch(gr.basic_block):
                 PACKETDATA = np.uint8(tx_id).tostring() + (input_items[1][self.header_size:self.block_size].real).tostring() + (input_items[1][self.header_size:self.block_size].imag).tostring()
                 self.s.sendto(PACKETDATA, (self.addr, self.port))
         else:
-            print("Txid too big")
+            self.log.error("Txid too big")
 
         self.consume(0,self.header_byte_length)
         self.consume(1, self.block_size)
