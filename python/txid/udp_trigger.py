@@ -60,7 +60,7 @@ class udp_trigger(gr.sync_block):
                 self.log.warn(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
                 continue
             if self.message_buffer is not None:
-                self.log.info("sending",number)
+                self.log.info(f"TxId {number}: Sending.")
                 self.message_port_pub(pmt.intern("out"),self.message_buffer)
         
         # self.socket_thread = threading.Thread(target=self.handle_packet)
@@ -78,7 +78,7 @@ class udp_trigger(gr.sync_block):
                 self.log.warn(f"Wrong target, I'm {self.tx_number} and packet asks for {number}")
                 continue
             if self.message_buffer is not None:
-                self.log.info("sending",number)
+                self.log.info(f"TxId {number}: Sending.")
                 self.message_port_pub(pmt.intern("out"),self.message_buffer)
    
     def __exit__(self, exc_type, exc_value, traceback):

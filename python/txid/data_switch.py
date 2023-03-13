@@ -94,7 +94,7 @@ class data_switch(gr.basic_block):
             self.consume(1, self.block_size)
             return 0
 
-        self.log.info(pmt.to_python(tags0[0].value), pmt.to_python(tags1[0].value))
+        self.log.info(f"Recieved tags with values {pmt.to_python(tags0[0].value)}, {pmt.to_python(tags1[0].value)}")
         if pmt.to_python(tags0[0].value) < pmt.to_python(tags1[0].value):
             # print("Decoded late")
             self.consume(0,self.header_byte_length)
