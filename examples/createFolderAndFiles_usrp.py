@@ -53,7 +53,7 @@ for rx_idx, rx in enumerate(rx_nodes):
             yaml_content += f"  node{node_id}:\n"
             yaml_content +=  "    container:\n"
             yaml_content += f"    - image: {docker_img_string}\n"
-            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {len(tx_nodes)}\"\n\n"  # TODO Add num samples to save?
+            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {21}\"\n\n"  # TODO Add num samples to save?  TODO Adapt to changing tx nodes num
             continue
 
         if node_id == args.sched_node: # TODO Allow scheduler to run on a Tx or Rx node?
@@ -65,10 +65,11 @@ for rx_idx, rx in enumerate(rx_nodes):
             continue
         
         if node_id in tx_nodes:
+            tx_index = tx_nodes.index(node_id)
             yaml_content += f"  node{node_id}:\n"
             yaml_content +=  "    container:\n"
             yaml_content += f"    - image: {docker_img_string}\n"
-            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -G {default_gain} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\"\n"
+            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -G {tx_nodes_gains[tx_index]} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\"\n"
             yaml_content +=  "    passive: true\n\n"
     
     # Folder creation

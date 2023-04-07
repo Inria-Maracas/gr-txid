@@ -2,7 +2,9 @@
 
 rx_node_list=( 22 38 )
 tx_node_list=( 6 4 35 7 8 9 13 14 16 17 18 23 24 25 27 28 32 33 34 37 38 )
+tx_power_list=( 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 )
 sched_node=1
+duration=60
 
 # Création des strings de listes de noeuds séparés par ,
 tx_list_string=""
@@ -10,6 +12,10 @@ for i in ${tx_node_list[@]}; do
   tx_list_string="${tx_list_string}${tx_list_string:+,}$i"
 done
 
+tx_power_string=""
+for i in ${tx_power_list[@]}; do 
+  tx_power_string="${tx_power_string}${tx_power_string:+,}$i"
+done
 
 rx_list_string=""
 for i in ${rx_node_list[@]}; do 
@@ -18,7 +24,7 @@ done
 
 # Création des fichiers et dossiers
 echo "Files and folders creation"
-python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -r ${rx_list_string} -t ${tx_list_string} -v -R -i "notou/gr-txid-cxlb:0.1"
+python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -d ${duration} -r ${rx_list_string} -t ${tx_list_string} -g ${tx_power_string} -v -R -i "notou/gr-txid-cxlb:0.4"
 
 # Création des tâches
 echo "Tasks creation and submission"
@@ -26,10 +32,11 @@ i=0
 echo  node${node_list[$i]}
 minus task create node${rx_node_list[$i]}
 NUM_FIRST_TASK=$(minus task submit node${rx_node_list[$i]}.task | tr -dc '0-9')
+NUM_LAST_TASK=$((${NUM_FIRST_TASK}+${#rx_node_list[@]}))
 i=1
 while [ $i -lt ${#rx_node_list[@]} ]; do
 	echo  node${node_list[$i]}
-	minus task create node${rx_node_list[$i]}
+	minus task create -f node${rx_node_list[$i]}
 	minus task submit node${rx_node_list[$i]}.task
 	i=$(($i+1))
 done
@@ -74,7 +81,8 @@ echo "Tasks finished"
 # # done
 
 # Récupération des résultats
-echo "Gathering result files"
+echo "Gathering result files in 10s"
+sleep 10
 cd ~/results
 echo "Create folder: "$result
 mkdir $result
