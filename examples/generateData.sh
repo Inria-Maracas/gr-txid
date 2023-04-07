@@ -40,6 +40,7 @@ rm -rf node[1-9]*
 
 # Attente que les tâches soient terminées
 echo "Wait for tasks to finish"
+result=$(date +"%Y%m%d_%Hh%M")
 loop=True
 while [ $loop = 'True' ]
 do
