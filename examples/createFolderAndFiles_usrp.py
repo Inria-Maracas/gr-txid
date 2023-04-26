@@ -18,6 +18,9 @@ parser.add_argument('-g', '--tx_nodes_gains', help='List of transmitting nodes g
                     type=lambda s: [int(item) for item in s.split(',')])
 parser.add_argument('-r', '--rx_nodes', help='List of recieving nodes', 
                     type=lambda s: [int(item) for item in s.split(',')], default=[1000])
+parser.add_argument("-a", "--samp-rate", dest="samp_rate", type=int, default=5000000, help="Set Sample rate [default=%(default)r]")
+parser.add_argument("-b", "--filter-width", dest="filter_width", type=float, default=float(0), help="Set Tx Filter Bandwidth [default=%(default)r]")
+parser.add_argument("-c", "--center-freq", dest="center_freq", type=float, default=float(433e6), help="Set Center frequency [default=%(default)r]")
 parser.add_argument('-s', dest="sched_node", help="Scheduler node", type=int, default=2)
 parser.add_argument('--tx_freq', help='Frequency of new packet transmission', type=float, default=0.001)
 parser.add_argument('-p', dest="port_num", help="Port to send scheduling paquets to", type=int, default=3580)
@@ -53,7 +56,7 @@ for rx_idx, rx in enumerate(rx_nodes):
             yaml_content += f"  node{node_id}:\n"
             yaml_content +=  "    container:\n"
             yaml_content += f"    - image: {docker_img_string}\n"
-            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {21}\"\n\n"  # TODO Add num samples to save?  TODO Adapt to changing tx nodes num
+            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/reciever.py -R re_{rx_idx:02d} -I im_{rx_idx:02d} -T {21} -a {args.samp_rate} -c {args.center_freq} \"\n\n"  # TODO Add num samples to save?  TODO Adapt to changing tx nodes num
             continue
 
         if node_id == args.sched_node: # TODO Allow scheduler to run on a Tx or Rx node?
@@ -69,7 +72,7 @@ for rx_idx, rx in enumerate(rx_nodes):
             yaml_content += f"  node{node_id}:\n"
             yaml_content +=  "    container:\n"
             yaml_content += f"    - image: {docker_img_string}\n"
-            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -G {tx_nodes_gains[tx_index]} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\"\n"
+            yaml_content += f"      command: bash -lc \"/root/gr-txid/examples/src/emitter.py -P {args.port_num} -T {tx_nodes.index(node_id)} -a {args.samp_rate} -b {args.filter_width} -c {args.center_freq} -G {tx_nodes_gains[tx_index]} -R {int(args.is_random)} -r {int(args.is_noise)} -f {pow_var_speed * int(args.is_var)} -M 0.5\"\n"
             yaml_content +=  "    passive: true\n\n"
     
     # Folder creation

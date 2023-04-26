@@ -30,12 +30,14 @@ import time
 
 class emitter(gr.top_block):
 
-    def __init__(self, gain_freq=2, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
+    def __init__(self, center_freq=433e6, filter_width=0, gain_freq=2, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, samp_rate=5000000, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
         gr.top_block.__init__(self, "Emitter", catch_exceptions=True)
 
         ##################################################
         # Parameters
         ##################################################
+        self.center_freq = center_freq
+        self.filter_width = filter_width
         self.gain_freq = gain_freq
         self.is_noise = is_noise
         self.is_random_source = is_random_source
@@ -44,6 +46,7 @@ class emitter(gr.top_block):
         self.nb_packets = nb_packets
         self.packet_len = packet_len
         self.port = port
+        self.samp_rate = samp_rate
         self.space_between_packets = space_between_packets
         self.tx_id = tx_id
         self.usrp_tx_gain = usrp_tx_gain
@@ -86,13 +89,11 @@ class emitter(gr.top_block):
 
 
         })
-        self.samp_rate = samp_rate = 5000000
         self.qpsk = qpsk = digital.constellation_qpsk().base()
         self.payload_len = payload_len = 560
         self.payload_guard_len = payload_guard_len = 200
         self.full_header = full_header = zpad+preamble_len+preamble_guard_len+ header_len + header_guard_len
         self.excess_bw = excess_bw = 0.350
-        self.center_freq = center_freq = 433e6
 
         ##################################################
         # Blocks
@@ -193,6 +194,20 @@ class emitter(gr.top_block):
         self.connect((self.txid_head_0, 0), (self.pdu_tagged_stream_to_pdu_0, 0))
 
 
+    def get_center_freq(self):
+        return self.center_freq
+
+    def set_center_freq(self, center_freq):
+        self.center_freq = center_freq
+        self.uhd_usrp_sink_0.set_center_freq(self.center_freq, 0)
+
+    def get_filter_width(self):
+        return self.filter_width
+
+    def set_filter_width(self, filter_width):
+        self.filter_width = filter_width
+        self.uhd_usrp_sink_0.set_bandwidth(self.filter_width, 0)
+
     def get_gain_freq(self):
         return self.gain_freq
 
@@ -246,6 +261,14 @@ class emitter(gr.top_block):
 
     def set_port(self, port):
         self.port = port
+
+    def get_samp_rate(self):
+        return self.samp_rate
+
+    def set_samp_rate(self, samp_rate):
+        self.samp_rate = samp_rate
+        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
+        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
 
     def get_space_between_packets(self):
         return self.space_between_packets
@@ -316,14 +339,6 @@ class emitter(gr.top_block):
     def set_sizes(self, sizes):
         self.sizes = sizes
 
-    def get_samp_rate(self):
-        return self.samp_rate
-
-    def set_samp_rate(self, samp_rate):
-        self.samp_rate = samp_rate
-        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
-        self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
-
     def get_qpsk(self):
         return self.qpsk
 
@@ -360,17 +375,16 @@ class emitter(gr.top_block):
     def set_excess_bw(self, excess_bw):
         self.excess_bw = excess_bw
 
-    def get_center_freq(self):
-        return self.center_freq
-
-    def set_center_freq(self, center_freq):
-        self.center_freq = center_freq
-        self.uhd_usrp_sink_0.set_center_freq(self.center_freq, 0)
-
 
 
 def argument_parser():
     parser = ArgumentParser()
+    parser.add_argument(
+        "-c", "--center-freq", dest="center_freq", type=eng_float, default=eng_notation.num_to_str(float(433e6)),
+        help="Set Center frequency [default=%(default)r]")
+    parser.add_argument(
+        "-b", "--filter-width", dest="filter_width", type=eng_float, default=eng_notation.num_to_str(float(0)),
+        help="Set Tx Filter Bandwidth [default=%(default)r]")
     parser.add_argument(
         "-f", "--gain-freq", dest="gain_freq", type=eng_float, default=eng_notation.num_to_str(float(2)),
         help="Set gain_frequency [default=%(default)r]")
@@ -396,6 +410,9 @@ def argument_parser():
         "-P", "--port", dest="port", type=intx, default=3580,
         help="Set port_number [default=%(default)r]")
     parser.add_argument(
+        "-a", "--samp-rate", dest="samp_rate", type=intx, default=5000000,
+        help="Set Sample rate [default=%(default)r]")
+    parser.add_argument(
         "-s", "--space-between-packets", dest="space_between_packets", type=intx, default=200,
         help="Set space_between_packets [default=%(default)r]")
     parser.add_argument(
@@ -410,7 +427,7 @@ def argument_parser():
 def main(top_block_cls=emitter, options=None):
     if options is None:
         options = argument_parser().parse_args()
-    tb = top_block_cls(gain_freq=options.gain_freq, is_noise=options.is_noise, is_random_source=options.is_random_source, max_gain=options.max_gain, min_gain=options.min_gain, nb_packets=options.nb_packets, packet_len=options.packet_len, port=options.port, space_between_packets=options.space_between_packets, tx_id=options.tx_id, usrp_tx_gain=options.usrp_tx_gain)
+    tb = top_block_cls(center_freq=options.center_freq, filter_width=options.filter_width, gain_freq=options.gain_freq, is_noise=options.is_noise, is_random_source=options.is_random_source, max_gain=options.max_gain, min_gain=options.min_gain, nb_packets=options.nb_packets, packet_len=options.packet_len, port=options.port, samp_rate=options.samp_rate, space_between_packets=options.space_between_packets, tx_id=options.tx_id, usrp_tx_gain=options.usrp_tx_gain)
 
     def sig_handler(sig=None, frame=None):
         tb.stop()
