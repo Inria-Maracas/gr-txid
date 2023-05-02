@@ -60,10 +60,13 @@ class data_switch(gr.basic_block):
 
     def vote(self, data):
         """Returns the most present value in the input array"""
-        values = np.zeros(self.tx_amount)
-        for i in range(len(data)):
-            values[data[i]] += 1
-        return np.argmax(values)
+        uniques, counts = np.unique(data, return_counts=True)
+        voted_val = uniques[np.argmax(counts)]
+
+        if voted_val >= self.tx_amount:
+            self.log.error(f"Header packet claims Id {voted_val} that is higher than available {self.tx_amount}, this might lead to a crash")
+
+        return voted_val
 
 
     def general_work(self, input_items, output_items):

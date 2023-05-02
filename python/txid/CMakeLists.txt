@@ -23,7 +23,8 @@ GR_PYTHON_INSTALL(
     FILES
     __init__.py
     data_switch.py
-    udp_trigger.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/txid
+    udp_trigger.py
+    record_payload.py DESTINATION ${GR_PYTHON_DIR}/gnuradio/txid
 )
 
 ########################################################################

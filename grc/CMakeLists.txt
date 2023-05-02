@@ -11,5 +11,6 @@ install(FILES
     txid_packet_isolator_c.block.yml
     txid_correlator.block.yml
     txid_data_switch.block.yml
-    txid_udp_trigger.block.yml DESTINATION share/gnuradio/grc/blocks
+    txid_udp_trigger.block.yml
+    txid_record_payload.block.yml DESTINATION share/gnuradio/grc/blocks
 )

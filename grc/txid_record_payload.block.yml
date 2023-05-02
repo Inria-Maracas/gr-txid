@@ -1,0 +1,75 @@
+id: txid_record_payload
+label: Payload Record
+category: '[Txid]'
+
+templates:
+  imports: from gnuradio import txid
+  make: txid.record_payload(${tx_amount}, ${base_filename}, ${header_size}, ${payload_size}, ${to_server}, ${server_ip}, ${server_port}, ${payloads_to_save})
+
+#  Make one 'parameters' list entry for every parameter you want settable from the GUI.
+#     Keys include:
+#     * id (makes the value accessible as keyname, e.g. in the make entry)
+#     * label (label shown in the GUI)
+#     * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#     * default
+parameters:
+- id: tx_amount
+  label: Tx amount
+  dtype: int
+  default: 2
+- id: base_filename
+  label: Base filename
+  dtype: string
+  default: "enreg"
+- id: header_size
+  label: Header size
+  dtype: int
+  default: 380
+- id: payload_size
+  label: Payload size
+  dtype: int
+  default: 600
+- id: payloads_to_save
+  label: Payloads to record
+  dtype: int
+  default: 50000
+- id: to_server
+  label: Send to server
+  dtype: bool
+  default: 'False'
+  options: ['True', 'False']
+  option_labels: [Yes, No]
+- id: server_ip
+  label: Server IP
+  dtype: string
+  default: "127.0.0.1"
+  hide: ${ 'none' if to_server else 'all' }
+- id: server_port
+  label: Server port
+  dtype: int
+  default: 3581
+  hide: ${ 'none' if to_server else 'all' }
+#- id: ...
+#  label: ...
+#  dtype: ...
+
+#  Make one 'inputs' list entry per input and one 'outputs' list entry per output.
+#  Keys include:
+#      * label (an identifier for the GUI)
+#      * domain (optional - stream or message. Default is stream)
+#      * dtype (e.g. int, float, complex, byte, short, xxx_vector, ...)
+#      * vlen (optional - data stream vector length. Default is 1)
+#      * optional (optional - set to 1 for optional inputs. Default is 0)
+inputs:
+- label: id
+  domain: stream
+  dtype: byte
+- label: frame
+  domain: stream
+  dtype: complex
+
+outputs:
+
+#  'file_format' specifies the version of the GRC yml format used in the file
+#  and should usually not be changed.
+file_format: 1

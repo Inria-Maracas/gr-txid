@@ -22,4 +22,5 @@ except ModuleNotFoundError:
 # import any pure python here
 from .data_switch import data_switch
 from .udp_trigger import udp_trigger
+from .record_payload import record_payload
 #
