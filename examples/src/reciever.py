@@ -65,7 +65,7 @@ class reciever(gr.top_block):
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_source_0.set_gain(usrp_rx_gain, 0)
-        self.txid_record_payload_0 = txid.record_payload((tx_amount+5), file, 380, 600, False, '127.0.0.1', 3581, nb_payloads_to_save)
+        self.txid_record_payload_0 = txid.record_payload(tx_amount, file, 380, 600, False, '127.0.0.1', 3581, nb_payloads_to_save)
         self.txid_packet_isolator_c_0 = txid.packet_isolator_c(979, 100, 200, "corr_est")
         self.txid_packet_isolator_c_0.set_min_output_buffer(2000)
         self.txid_correlator_0 = txid.correlator(preamble, 1, 0, 0.3, digital.THRESHOLD_ABSOLUTE)
