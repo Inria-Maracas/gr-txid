@@ -719,7 +719,7 @@ blocks:
     label: RX Gain
     short_id: g
     type: eng_float
-    value: '25'
+    value: '20'
   states:
     bus_sink: false
     bus_source: false

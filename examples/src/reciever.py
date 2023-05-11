@@ -28,7 +28,7 @@ import time
 
 class reciever(gr.top_block):
 
-    def __init__(self, center_freq=433e6, file='enreg', nb_payloads_to_save=((50000 + 2000)), samp_rate=5000000, tx_amount=21, usrp_rx_gain=25):
+    def __init__(self, center_freq=433e6, file='enreg', nb_payloads_to_save=((50000 + 2000)), samp_rate=5000000, tx_amount=21, usrp_rx_gain=20):
         gr.top_block.__init__(self, "Tx Id Reciever", catch_exceptions=True)
 
         ##################################################
@@ -156,7 +156,7 @@ def argument_parser():
         "-T", "--tx-amount", dest="tx_amount", type=intx, default=21,
         help="Set Transmitter amount [default=%(default)r]")
     parser.add_argument(
-        "-g", "--usrp-rx-gain", dest="usrp_rx_gain", type=eng_float, default=eng_notation.num_to_str(float(25)),
+        "-g", "--usrp-rx-gain", dest="usrp_rx_gain", type=eng_float, default=eng_notation.num_to_str(float(20)),
         help="Set RX Gain [default=%(default)r]")
     return parser
 
