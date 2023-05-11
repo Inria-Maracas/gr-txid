@@ -1,6 +1,6 @@
 options:
   parameters:
-    author: ''
+    author: Cyrille Morin
     catch_exceptions: 'True'
     category: Custom
     cmake_opt: ''
@@ -22,7 +22,7 @@ options:
     run_options: run
     sizing_mode: fixed
     thread_safe_setters: ''
-    title: ''
+    title: Tx Id Emitter
     window_size: 2000,2000
   states:
     bus_sink: false
@@ -42,7 +42,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [472, 12.0]
+    coordinate: [384, 876.0]
     rotation: 0
     state: enabled
 - name: full_header

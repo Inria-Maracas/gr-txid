@@ -5,7 +5,8 @@
 # SPDX-License-Identifier: GPL-3.0
 #
 # GNU Radio Python Flow Graph
-# Title: Emitter
+# Title: Tx Id Emitter
+# Author: Cyrille Morin
 # GNU Radio version: 3.10.5.1
 
 def struct(data): return type('Struct', (object,), data)()
@@ -31,7 +32,7 @@ import time
 class emitter(gr.top_block):
 
     def __init__(self, center_freq=433e6, filter_width=0, gain_freq=2, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, samp_rate=5000000, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
-        gr.top_block.__init__(self, "Emitter", catch_exceptions=True)
+        gr.top_block.__init__(self, "Tx Id Emitter", catch_exceptions=True)
 
         ##################################################
         # Parameters

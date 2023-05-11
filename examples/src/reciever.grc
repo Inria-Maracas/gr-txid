@@ -260,7 +260,7 @@ blocks:
     alias: ''
     base_filename: file
     comment: ''
-    header_size: '380'
+    header_size: len(preamble) + 300
     payload_size: '600'
     payloads_to_save: nb_payloads_to_save
     server_ip: 127.0.0.1
@@ -719,7 +719,7 @@ blocks:
     label: RX Gain
     short_id: g
     type: eng_float
-    value: '30'
+    value: '25'
   states:
     bus_sink: false
     bus_source: false

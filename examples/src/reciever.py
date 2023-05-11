@@ -28,7 +28,7 @@ import time
 
 class reciever(gr.top_block):
 
-    def __init__(self, center_freq=433e6, file='enreg', nb_payloads_to_save=((50000 + 2000)), samp_rate=5000000, tx_amount=21, usrp_rx_gain=30):
+    def __init__(self, center_freq=433e6, file='enreg', nb_payloads_to_save=((50000 + 2000)), samp_rate=5000000, tx_amount=21, usrp_rx_gain=25):
         gr.top_block.__init__(self, "Tx Id Reciever", catch_exceptions=True)
 
         ##################################################
@@ -65,7 +65,7 @@ class reciever(gr.top_block):
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
         self.uhd_usrp_source_0.set_gain(usrp_rx_gain, 0)
-        self.txid_record_payload_0 = txid.record_payload(tx_amount, file, 380, 600, False, '127.0.0.1', 3581, nb_payloads_to_save)
+        self.txid_record_payload_0 = txid.record_payload((tx_amount+5), file, (len(preamble) + 300), 600, False, '127.0.0.1', 3581, nb_payloads_to_save)
         self.txid_packet_isolator_c_0 = txid.packet_isolator_c(979, 100, 200, "corr_est")
         self.txid_packet_isolator_c_0.set_min_output_buffer(2000)
         self.txid_correlator_0 = txid.correlator(preamble, 1, 0, 0.3, digital.THRESHOLD_ABSOLUTE)
@@ -156,7 +156,7 @@ def argument_parser():
         "-T", "--tx-amount", dest="tx_amount", type=intx, default=21,
         help="Set Transmitter amount [default=%(default)r]")
     parser.add_argument(
-        "-g", "--usrp-rx-gain", dest="usrp_rx_gain", type=eng_float, default=eng_notation.num_to_str(float(30)),
+        "-g", "--usrp-rx-gain", dest="usrp_rx_gain", type=eng_float, default=eng_notation.num_to_str(float(25)),
         help="Set RX Gain [default=%(default)r]")
     return parser
 
