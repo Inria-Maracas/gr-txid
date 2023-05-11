@@ -266,7 +266,7 @@ blocks:
     server_ip: 127.0.0.1
     server_port: '3581'
     to_server: 'False'
-    tx_amount: tx_amount+5
+    tx_amount: tx_amount
   states:
     bus_sink: false
     bus_source: false
