@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: Tx Id Emitter
 # Author: Cyrille Morin
-# GNU Radio version: 3.10.5.1
+# GNU Radio version: 3.10.6.0
 
 def struct(data): return type('Struct', (object,), data)()
 from gnuradio import analog
@@ -154,10 +154,11 @@ class emitter(gr.top_block):
         self.blocks_selector_1.set_enabled(True)
         self.blocks_selector_0 = blocks.selector(gr.sizeof_gr_complex*1,0 if (is_noise) else 1,0)
         self.blocks_selector_0.set_enabled(True)
+        self.blocks_repeat_0 = blocks.repeat(gr.sizeof_gr_complex*1, payload_len)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
         self.blocks_multiply_const_xx_0 = blocks.multiply_const_cc(0.05, 1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
-        self.analog_sig_source_x_0_0 = analog.sig_source_f(samp_rate, analog.GR_TRI_WAVE, gain_freq, ((max_gain-min_gain)), min_gain, 0)
+        self.analog_sig_source_x_0_0 = analog.sig_source_f(100, analog.GR_TRI_WAVE, gain_freq, ((max_gain-min_gain)), min_gain, 0)
         self.analog_sig_source_x_0_0.set_max_output_buffer(1)
         self.analog_random_uniform_source_x_0 = analog.random_uniform_source_b(0, 256, 0)
         self.analog_noise_source_x_0 = analog.noise_source_c(analog.GR_UNIFORM, 1, 0)
@@ -170,11 +171,12 @@ class emitter(gr.top_block):
         self.msg_connect((self.txid_udp_trigger_0, 'out'), (self.pdu_pdu_to_tagged_stream_0, 'pdus'))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_selector_0, 0))
         self.connect((self.analog_random_uniform_source_x_0, 0), (self.blocks_selector_1, 0))
-        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
-        self.connect((self.blocks_float_to_complex_0, 0), (self.blocks_multiply_xx_0, 1))
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
+        self.connect((self.blocks_float_to_complex_0, 0), (self.blocks_repeat_0, 0))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_stream_mux_3, 3))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_mux_4, 1))
+        self.connect((self.blocks_repeat_0, 0), (self.blocks_multiply_xx_0, 1))
         self.connect((self.blocks_selector_0, 0), (self.blocks_multiply_xx_0, 0))
         self.connect((self.blocks_selector_1, 0), (self.digital_constellation_modulator_0, 0))
         self.connect((self.blocks_stream_mux_3, 0), (self.blocks_stream_to_tagged_stream_0_0, 0))
@@ -268,7 +270,6 @@ class emitter(gr.top_block):
 
     def set_samp_rate(self, samp_rate):
         self.samp_rate = samp_rate
-        self.analog_sig_source_x_0_0.set_sampling_freq(self.samp_rate)
         self.uhd_usrp_sink_0.set_samp_rate(self.samp_rate)
 
     def get_space_between_packets(self):
@@ -351,6 +352,7 @@ class emitter(gr.top_block):
 
     def set_payload_len(self, payload_len):
         self.payload_len = payload_len
+        self.blocks_repeat_0.set_interpolation(self.payload_len)
         self.blocks_tagged_stream_multiply_length_0.set_scalar(((self.full_header+self.payload_len + self.payload_guard_len)/float(self.full_header)))
 
     def get_payload_guard_len(self):

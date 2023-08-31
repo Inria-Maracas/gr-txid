@@ -278,7 +278,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [416, 580.0]
+    coordinate: [400, 596.0]
     rotation: 0
     state: enabled
 - name: analog_random_uniform_source_x_0
@@ -312,7 +312,8 @@ blocks:
     minoutbuf: '0'
     offset: min_gain
     phase: '0'
-    samp_rate: samp_rate
+    samp_rate: '100'
+    showports: 'False'
     type: float
     waveform: analog.GR_TRI_WAVE
   states:
@@ -373,9 +374,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [864, 688]
+    coordinate: [864, 680.0]
     rotation: 0
     state: enabled
+- name: blocks_repeat_0
+  id: blocks_repeat
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    interp: payload_len
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    type: complex
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1048, 868.0]
+    rotation: 0
+    state: true
 - name: blocks_selector_0
   id: blocks_selector
   parameters:
@@ -457,7 +476,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1184, 672.0]
+    coordinate: [1184, 664.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_to_tagged_stream_0
@@ -514,7 +533,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1440, 700.0]
+    coordinate: [1440, 696.0]
     rotation: 0
     state: enabled
 - name: blocks_vector_source_x_0_0
@@ -816,7 +835,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 732.0]
+    coordinate: [1048, 728.0]
     rotation: 0
     state: enabled
 - name: packet_len
@@ -1295,9 +1314,10 @@ connections:
 - [analog_random_uniform_source_x_0, '0', blocks_selector_1, '0']
 - [analog_sig_source_x_0_0, '0', blocks_float_to_complex_0, '0']
 - [analog_sig_source_x_0_0, '0', blocks_float_to_complex_0, '1']
-- [blocks_float_to_complex_0, '0', blocks_multiply_xx_0, '1']
+- [blocks_float_to_complex_0, '0', blocks_repeat_0, '0']
 - [blocks_multiply_const_xx_0, '0', blocks_stream_mux_3, '3']
 - [blocks_multiply_xx_0, '0', blocks_stream_mux_4, '1']
+- [blocks_repeat_0, '0', blocks_multiply_xx_0, '1']
 - [blocks_selector_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_selector_1, '0', digital_constellation_modulator_0, '0']
 - [blocks_stream_mux_3, '0', blocks_stream_to_tagged_stream_0_0, '0']
@@ -1321,4 +1341,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.5.1
+  grc_version: 3.10.6.0
