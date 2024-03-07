@@ -33,6 +33,42 @@ options:
     state: enabled
 
 blocks:
+- name: chip_seq_0
+  id: variable
+  parameters:
+    comment: ''
+    value: (0,0,1,1,1,1,1,0,0,0,1,0,0,1,0,1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 892.0]
+    rotation: 0
+    state: true
+- name: chip_seq_7
+  id: variable
+  parameters:
+    comment: ''
+    value: (1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 948.0]
+    rotation: 0
+    state: true
+- name: chip_seq_A
+  id: variable
+  parameters:
+    comment: ''
+    value: (0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [184, 1004.0]
+    rotation: 0
+    state: true
 - name: excess_bw
   id: variable
   parameters:
@@ -42,7 +78,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 876.0]
+    coordinate: [384, 1036.0]
     rotation: 0
     state: enabled
 - name: full_header
@@ -73,12 +109,24 @@ blocks:
   id: variable
   parameters:
     comment: ''
+    value: '400'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1592, 76.0]
+    rotation: 0
+    state: true
+- name: header_len_0
+  id: variable
+  parameters:
+    comment: ''
     value: '320'
   states:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1600, 76.0]
+    coordinate: [1896, 84.0]
     rotation: 0
     state: true
 - name: payload_guard_len
@@ -187,6 +235,7 @@ blocks:
     const_points: '[-1-1j, -1+1j, 1+1j, 1-1j]'
     dims: '1'
     normalization: digital.constellation.AMPLITUDE_NORMALIZATION
+    npwr: '1.0'
     precision: '8'
     rot_sym: '4'
     soft_dec_lut: None
@@ -196,7 +245,19 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [384, 804.0]
+    coordinate: [384, 964.0]
+    rotation: 0
+    state: true
+- name: shr_field_chips
+  id: variable
+  parameters:
+    comment: ''
+    value: chip_seq_0 * 8 + chip_seq_7 + chip_seq_A
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [176, 1068.0]
     rotation: 0
     state: true
 - name: sizes
@@ -278,7 +339,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 596.0]
+    coordinate: [416, 572.0]
     rotation: 0
     state: enabled
 - name: analog_random_uniform_source_x_0
@@ -320,7 +381,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [584, 844.0]
+    coordinate: [584, 836.0]
     rotation: 0
     state: enabled
 - name: blocks_float_to_complex_0
@@ -347,7 +408,7 @@ blocks:
     comment: 'Avoid USRP
 
       saturation/clipping'
-    const: '0.05'
+    const: '0.06'
     maxoutbuf: '0'
     minoutbuf: '0'
     type: complex
@@ -356,7 +417,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [232, 332]
+    coordinate: [248, 332.0]
     rotation: 0
     state: enabled
 - name: blocks_multiply_xx_0
@@ -392,7 +453,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 868.0]
+    coordinate: [1048, 860.0]
     rotation: 0
     state: true
 - name: blocks_selector_0
@@ -457,7 +518,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [536, 248.0]
+    coordinate: [536, 240.0]
     rotation: 0
     state: enabled
 - name: blocks_stream_mux_4
@@ -547,7 +608,7 @@ blocks:
     repeat: 'True'
     tags: '[]'
     type: byte
-    vector: (0,0,0,0,0xA7)
+    vector: shr_field_chips
     vlen: '1'
   states:
     bus_sink: false
@@ -564,10 +625,10 @@ blocks:
     comment: Header content
     maxoutbuf: '0'
     minoutbuf: '0'
-    repeat: 'False'
+    repeat: 'True'
     tags: '[]'
     type: byte
-    vector: (tx_id, tx_id, tx_id, tx_id, tx_id)
+    vector: '[tx_id, tx_id, tx_id, tx_id, tx_id]'
     vlen: '1'
   states:
     bus_sink: false
@@ -576,6 +637,26 @@ blocks:
     coordinate: [256, 428]
     rotation: 180
     state: enabled
+- name: blocks_vector_source_x_0_0_1
+  id: blocks_vector_source_x
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    repeat: 'True'
+    tags: '[]'
+    type: byte
+    vector: (0,0,0,0,0xA7)
+    vlen: '1'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [32, 828.0]
+    rotation: 0
+    state: disabled
 - name: center_freq
   id: parameter
   parameters:
@@ -614,7 +695,7 @@ blocks:
     bus_structure: null
     coordinate: [400, 668.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: digital_ofdm_tx_0
   id: digital_ofdm_tx
   parameters:
@@ -629,11 +710,11 @@ blocks:
     minoutbuf: '0'
     occupied_carriers: ''
     packet_len_key: length
-    payload_mod: '"QPSK"'
+    payload_mod: '"BPSK"'
     pilot_carriers: ''
     pilot_symbols: ''
     rolloff: '0'
-    scramble_bits: 'False'
+    scramble_bits: 'True'
     sync_word1: ''
     sync_word2: ''
   states:
@@ -669,7 +750,7 @@ blocks:
     label: gain_frequency
     short_id: f
     type: eng_float
-    value: '2'
+    value: '7'
   states:
     bus_sink: false
     bus_source: false
@@ -778,7 +859,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 244.0]
+    coordinate: [400, 240.0]
     rotation: 0
     state: enabled
 - name: null_1
@@ -797,7 +878,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 308.0]
+    coordinate: [400, 304.0]
     rotation: 0
     state: enabled
 - name: null_2
@@ -816,7 +897,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [400, 372.0]
+    coordinate: [400, 368.0]
     rotation: 0
     state: enabled
 - name: null_3
@@ -835,9 +916,27 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1048, 728.0]
+    coordinate: [1048, 724.0]
     rotation: 0
     state: enabled
+- name: oqpsk_0
+  id: oqpsk
+  parameters:
+    affinity: ''
+    alias: ''
+    comment: ''
+    maxoutbuf: '0'
+    minoutbuf: '0'
+    roll_off_factor: '0.1'
+    samp_rate: samp_rate
+    samples_per_symbols: samp_rate//800000
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [408, 796.0]
+    rotation: 0
+    state: disabled
 - name: packet_len
   id: parameter
   parameters:
@@ -871,7 +970,7 @@ blocks:
     bus_structure: null
     coordinate: [1544, 300.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: pdu_tagged_stream_to_pdu_0
   id: pdu_tagged_stream_to_pdu
   parameters:
@@ -888,7 +987,7 @@ blocks:
     bus_structure: null
     coordinate: [1120, 300.0]
     rotation: 0
-    state: true
+    state: enabled
 - name: port
   id: parameter
   parameters:
@@ -1011,7 +1110,7 @@ blocks:
     bus_sink: false
     bus_source: false
     bus_structure: null
-    coordinate: [1344, 284.0]
+    coordinate: [1360, 284.0]
     rotation: 0
     state: enabled
 - name: uhd_usrp_sink_0
@@ -1320,6 +1419,7 @@ connections:
 - [blocks_repeat_0, '0', blocks_multiply_xx_0, '1']
 - [blocks_selector_0, '0', blocks_multiply_xx_0, '0']
 - [blocks_selector_1, '0', digital_constellation_modulator_0, '0']
+- [blocks_selector_1, '0', oqpsk_0, '0']
 - [blocks_stream_mux_3, '0', blocks_stream_to_tagged_stream_0_0, '0']
 - [blocks_stream_mux_4, '0', blocks_tagged_stream_multiply_length_0, '0']
 - [blocks_stream_to_tagged_stream_0, '0', digital_ofdm_tx_0, '0']
@@ -1327,12 +1427,14 @@ connections:
 - [blocks_tagged_stream_multiply_length_0, '0', uhd_usrp_sink_0, '0']
 - [blocks_vector_source_x_0_0, '0', blocks_selector_1, '1']
 - [blocks_vector_source_x_0_0_0, '0', blocks_stream_to_tagged_stream_0, '0']
+- [blocks_vector_source_x_0_0_1, '0', blocks_selector_1, '1']
 - [digital_constellation_modulator_0, '0', blocks_selector_0, '1']
 - [digital_ofdm_tx_0, '0', blocks_multiply_const_xx_0, '0']
 - [null_0, '0', blocks_stream_mux_3, '0']
 - [null_1, '0', blocks_stream_mux_3, '2']
 - [null_2, '0', blocks_stream_mux_3, '4']
 - [null_3, '0', blocks_stream_mux_4, '2']
+- [oqpsk_0, '0', blocks_selector_0, '1']
 - [pdu_pdu_to_tagged_stream_0, '0', blocks_stream_mux_4, '0']
 - [pdu_tagged_stream_to_pdu_0, pdus, txid_udp_trigger_0, in]
 - [preamble_vect, '0', blocks_stream_mux_3, '1']
@@ -1341,4 +1443,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.6.0
+  grc_version: 3.10.9.2

@@ -33,6 +33,66 @@ options:
     state: enabled
 
 blocks:
+- name: full_header
+  id: variable
+  parameters:
+    comment: ''
+    value: zpad+preamble_len+preamble_guard_len+ header_len + header_guard_len
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1184, 140.0]
+    rotation: 0
+    state: enabled
+- name: header_guard_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '100'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 76.0]
+    rotation: 0
+    state: true
+- name: header_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '400'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1280, 76.0]
+    rotation: 0
+    state: true
+- name: payload_guard_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '200'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 140.0]
+    rotation: 0
+    state: true
+- name: payload_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '560'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1280, 140.0]
+    rotation: 0
+    state: true
 - name: preamble
   id: variable
   parameters:
@@ -84,6 +144,42 @@ blocks:
     coordinate: [176, 140.0]
     rotation: 0
     state: enabled
+- name: preamble_guard_len
+  id: variable
+  parameters:
+    comment: ''
+    value: '40'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1376, 12.0]
+    rotation: 0
+    state: true
+- name: preamble_len
+  id: variable
+  parameters:
+    comment: ''
+    value: len(preamble)
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1280, 12.0]
+    rotation: 0
+    state: true
+- name: zpad
+  id: variable
+  parameters:
+    comment: ''
+    value: '3000'
+  states:
+    bus_sink: false
+    bus_source: false
+    bus_structure: null
+    coordinate: [1208, 76.0]
+    rotation: 0
+    state: true
 - name: blocks_skiphead_0
   id: blocks_skiphead
   parameters:
@@ -133,10 +229,10 @@ blocks:
     minoutbuf: '0'
     occupied_carriers: ''
     packet_len_key: '"rx_len"'
-    payload_mod: '"QPSK"'
+    payload_mod: '"BPSK"'
     pilot_carriers: ''
     pilot_symbols: ''
-    scramble_bits: 'False'
+    scramble_bits: 'True'
     sync_word1: ''
     sync_word2: ''
   states:
@@ -243,8 +339,8 @@ blocks:
     lookup_window: '200'
     maxoutbuf: '0'
     minoutbuf: '2000'
-    payload_length: '979'
-    preamble_length: '100'
+    payload_length: (preamble_guard_len//2)-1+header_len+header_guard_len+payload_len+payload_guard_len//2
+    preamble_length: preamble_len+(preamble_guard_len//2)+1
     tag_name: '"corr_est"'
   states:
     bus_sink: false
@@ -260,7 +356,7 @@ blocks:
     alias: ''
     base_filename: file
     comment: ''
-    header_size: len(preamble) + 300
+    header_size: (preamble_guard_len//2)-1+header_len+header_guard_len-20
     payload_size: '600'
     payloads_to_save: nb_payloads_to_save
     server_ip: 127.0.0.1
@@ -738,4 +834,4 @@ connections:
 
 metadata:
   file_format: 1
-  grc_version: 3.10.5.1
+  grc_version: 3.10.9.2

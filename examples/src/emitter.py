@@ -7,7 +7,7 @@
 # GNU Radio Python Flow Graph
 # Title: Tx Id Emitter
 # Author: Cyrille Morin
-# GNU Radio version: 3.10.6.0
+# GNU Radio version: 3.10.9.2
 
 def struct(data): return type('Struct', (object,), data)()
 from gnuradio import analog
@@ -31,7 +31,7 @@ import time
 
 class emitter(gr.top_block):
 
-    def __init__(self, center_freq=433e6, filter_width=0, gain_freq=2, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, samp_rate=5000000, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
+    def __init__(self, center_freq=433e6, filter_width=0, gain_freq=7, is_noise=0, is_random_source=0, max_gain=0.1, min_gain=0.001, nb_packets=70000, packet_len=400, port=3580, samp_rate=5000000, space_between_packets=200, tx_id=0, usrp_tx_gain=3):
         gr.top_block.__init__(self, "Tx Id Emitter", catch_exceptions=True)
 
         ##################################################
@@ -59,8 +59,11 @@ class emitter(gr.top_block):
         self.zpad = zpad = 3000
         self.preamble_len = preamble_len = len(preamble)
         self.preamble_guard_len = preamble_guard_len = 40
-        self.header_len = header_len = 320
+        self.header_len = header_len = 400
         self.header_guard_len = header_guard_len = 100
+        self.chip_seq_A = chip_seq_A = (0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1)
+        self.chip_seq_7 = chip_seq_7 = (1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0)
+        self.chip_seq_0 = chip_seq_0 = (0,0,1,1,1,1,1,0,0,0,1,0,0,1,0,1)
         self.sizes = sizes = struct({
 
             'zpad': 3000,
@@ -90,9 +93,12 @@ class emitter(gr.top_block):
 
 
         })
+        self.shr_field_chips = shr_field_chips = chip_seq_0 * 8 + chip_seq_7 + chip_seq_A
         self.qpsk = qpsk = digital.constellation_qpsk().base()
+        self.qpsk.set_npwr(1.0)
         self.payload_len = payload_len = 560
         self.payload_guard_len = payload_guard_len = 200
+        self.header_len_0 = header_len_0 = 320
         self.full_header = full_header = zpad+preamble_len+preamble_guard_len+ header_len + header_guard_len
         self.excess_bw = excess_bw = 0.350
 
@@ -130,10 +136,10 @@ class emitter(gr.top_block):
             cp_len=16,
             packet_length_tag_key='length',
             bps_header=1,
-            bps_payload=2,
+            bps_payload=1,
             rolloff=0,
             debug_log=False,
-            scramble_bits=False)
+            scramble_bits=True)
         self.digital_constellation_modulator_0 = digital.generic_mod(
             constellation=qpsk,
             differential=True,
@@ -143,8 +149,8 @@ class emitter(gr.top_block):
             verbose=False,
             log=False,
             truncate=False)
-        self.blocks_vector_source_x_0_0_0 = blocks.vector_source_b((tx_id, tx_id, tx_id, tx_id, tx_id), False, 1, [])
-        self.blocks_vector_source_x_0_0 = blocks.vector_source_b((0,0,0,0,0xA7), True, 1, [])
+        self.blocks_vector_source_x_0_0_0 = blocks.vector_source_b([tx_id, tx_id, tx_id, tx_id, tx_id], True, 1, [])
+        self.blocks_vector_source_x_0_0 = blocks.vector_source_b(shr_field_chips, True, 1, [])
         self.blocks_tagged_stream_multiply_length_0 = blocks.tagged_stream_multiply_length(gr.sizeof_gr_complex*1, 'packet_len', ((full_header+payload_len + payload_guard_len)/float(full_header)))
         self.blocks_stream_to_tagged_stream_0_0 = blocks.stream_to_tagged_stream(gr.sizeof_gr_complex, 1, full_header, "packet_len")
         self.blocks_stream_to_tagged_stream_0 = blocks.stream_to_tagged_stream(gr.sizeof_char, 1, 5, "length")
@@ -156,7 +162,7 @@ class emitter(gr.top_block):
         self.blocks_selector_0.set_enabled(True)
         self.blocks_repeat_0 = blocks.repeat(gr.sizeof_gr_complex*1, payload_len)
         self.blocks_multiply_xx_0 = blocks.multiply_vcc(1)
-        self.blocks_multiply_const_xx_0 = blocks.multiply_const_cc(0.05, 1)
+        self.blocks_multiply_const_xx_0 = blocks.multiply_const_cc(0.06, 1)
         self.blocks_float_to_complex_0 = blocks.float_to_complex(1)
         self.analog_sig_source_x_0_0 = analog.sig_source_f(100, analog.GR_TRI_WAVE, gain_freq, ((max_gain-min_gain)), min_gain, 0)
         self.analog_sig_source_x_0_0.set_max_output_buffer(1)
@@ -283,7 +289,7 @@ class emitter(gr.top_block):
 
     def set_tx_id(self, tx_id):
         self.tx_id = tx_id
-        self.blocks_vector_source_x_0_0_0.set_data((self.tx_id, self.tx_id, self.tx_id, self.tx_id, self.tx_id), [])
+        self.blocks_vector_source_x_0_0_0.set_data([self.tx_id, self.tx_id, self.tx_id, self.tx_id, self.tx_id], [])
 
     def get_usrp_tx_gain(self):
         return self.usrp_tx_gain
@@ -335,11 +341,39 @@ class emitter(gr.top_block):
         self.header_guard_len = header_guard_len
         self.set_full_header(self.zpad+self.preamble_len+self.preamble_guard_len+ self.header_len + self.header_guard_len)
 
+    def get_chip_seq_A(self):
+        return self.chip_seq_A
+
+    def set_chip_seq_A(self, chip_seq_A):
+        self.chip_seq_A = chip_seq_A
+        self.set_shr_field_chips(self.chip_seq_0 * 8 + self.chip_seq_7 + self.chip_seq_A)
+
+    def get_chip_seq_7(self):
+        return self.chip_seq_7
+
+    def set_chip_seq_7(self, chip_seq_7):
+        self.chip_seq_7 = chip_seq_7
+        self.set_shr_field_chips(self.chip_seq_0 * 8 + self.chip_seq_7 + self.chip_seq_A)
+
+    def get_chip_seq_0(self):
+        return self.chip_seq_0
+
+    def set_chip_seq_0(self, chip_seq_0):
+        self.chip_seq_0 = chip_seq_0
+        self.set_shr_field_chips(self.chip_seq_0 * 8 + self.chip_seq_7 + self.chip_seq_A)
+
     def get_sizes(self):
         return self.sizes
 
     def set_sizes(self, sizes):
         self.sizes = sizes
+
+    def get_shr_field_chips(self):
+        return self.shr_field_chips
+
+    def set_shr_field_chips(self, shr_field_chips):
+        self.shr_field_chips = shr_field_chips
+        self.blocks_vector_source_x_0_0.set_data(self.shr_field_chips, [])
 
     def get_qpsk(self):
         return self.qpsk
@@ -361,6 +395,12 @@ class emitter(gr.top_block):
     def set_payload_guard_len(self, payload_guard_len):
         self.payload_guard_len = payload_guard_len
         self.blocks_tagged_stream_multiply_length_0.set_scalar(((self.full_header+self.payload_len + self.payload_guard_len)/float(self.full_header)))
+
+    def get_header_len_0(self):
+        return self.header_len_0
+
+    def set_header_len_0(self, header_len_0):
+        self.header_len_0 = header_len_0
 
     def get_full_header(self):
         return self.full_header
@@ -389,7 +429,7 @@ def argument_parser():
         "-b", "--filter-width", dest="filter_width", type=eng_float, default=eng_notation.num_to_str(float(0)),
         help="Set Tx Filter Bandwidth [default=%(default)r]")
     parser.add_argument(
-        "-f", "--gain-freq", dest="gain_freq", type=eng_float, default=eng_notation.num_to_str(float(2)),
+        "-f", "--gain-freq", dest="gain_freq", type=eng_float, default=eng_notation.num_to_str(float(7)),
         help="Set gain_frequency [default=%(default)r]")
     parser.add_argument(
         "-r", "--is-noise", dest="is_noise", type=intx, default=0,
