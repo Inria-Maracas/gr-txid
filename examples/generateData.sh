@@ -1,10 +1,26 @@
 #!/bin/bash
 
-rx_node_list=( 22 38 )
-tx_node_list=( 6 4 35 7 8 9 13 14 16 17 18 23 24 25 27 28 32 33 34 37 38 )
-tx_power_list=( 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 8 )
-sched_node=1
-duration=60
+# rx_node_list=( 50 )
+# rx_node_list=(     3  4  6  7  8  9 13 14 16 17 18 23 24 25 27 28 32 33 34 35 37 38 10 11 30 31 )
+rx_node_list=(     3  4  6  7  8  9 13 14 16 17 18 23 24 25 27 28 32 33 34 35 37 38 )
+# rx_node_list=(     12 )
+#rx_node_list=(     3  4  6  7   )
+# node indeces     0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27
+# tx_node_list=(    03 04 06 07 08 09 50 16 50 50 23 24 50 50 50 50 33 50 50 37 38 )
+# tx_node_list=(    03 04 06 07 08 09 13 14 16 17 18 23 24 25 27 28 33 34 35 37 38 )
+# tx_node_list=(     3  4  6  7  8  9 13 14 16 17 18 23 24 25 27 28 32 33 34 35 37 38 10 11 30 31 )
+tx_node_list=(     3  4  6  7  8  9 13 14 16 17 18 23 24 25 27 28 32 33 34 35 37 38 )
+#tx_node_list=( 4 6 )
+tx_power_list=(    8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8  8 )
+sched_node=39
+duration=30
+varying=True
+variation_freq=3
+
+freq=865000000
+samp_rate=5000000
+#docker_image="notou/gr-txid-cxlb:0.5" # On dockerhub
+docker_image="ghcr.io/inria-maracas/gr-txid-cxlb:0.5" # On github
 
 # Création des strings de listes de noeuds séparés par ,
 tx_list_string=""
@@ -17,25 +33,37 @@ for i in ${tx_power_list[@]}; do
   tx_power_string="${tx_power_string}${tx_power_string:+,}$i"
 done
 
+tx_power_string=""
+for i in ${tx_power_list[@]}; do 
+  tx_power_string="${tx_power_string}${tx_power_string:+,}$i"
+done
+
+
 rx_list_string=""
 for i in ${rx_node_list[@]}; do 
   rx_list_string="${rx_list_string}${rx_list_string:+,}$i"
 done
 
+
+var_option=""
+if [ $varying = "True" ]
+then var_option="-v"
+fi
+
 # Création des fichiers et dossiers
 echo "Files and folders creation"
-python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -d ${duration} -r ${rx_list_string} -t ${tx_list_string} -g ${tx_power_string} -v -R -i "notou/gr-txid-cxlb:0.4"
+python3 createFolderAndFiles_usrp.py -s ${sched_node} -p 3580 -d ${duration} -r ${rx_list_string} -t ${tx_list_string} -g ${tx_power_string} -G 20 --tx_freq 0.001 -a ${samp_rate} -b 0 -f ${freq} ${var_option} --var_freq ${variation_freq} -i ${docker_image}
 
 # Création des tâches
 echo "Tasks creation and submission"
 i=0
-echo  node${node_list[$i]}
-minus task create node${rx_node_list[$i]}
+echo  node${rx_node_list[$i]}
+minus task create -f node${rx_node_list[$i]}
 NUM_FIRST_TASK=$(minus task submit node${rx_node_list[$i]}.task | tr -dc '0-9')
 NUM_LAST_TASK=$((${NUM_FIRST_TASK}+${#rx_node_list[@]}))
 i=1
 while [ $i -lt ${#rx_node_list[@]} ]; do
-	echo  node${node_list[$i]}
+	echo  node${rx_node_list[$i]}
 	minus task create -f node${rx_node_list[$i]}
 	minus task submit node${rx_node_list[$i]}.task
 	i=$(($i+1))
@@ -65,20 +93,20 @@ do
 done
 echo "Tasks finished"
 
-# # Décompression des résultats et copie des fichiers
-# # echo "Unzipping results and copying files"
-# # cd ~/results
-# # echo "Create folder: "$result
-# # mkdir $result
-# # i=0
-# # while [ $i -lt $NB_NOEUDS ]; do
-# # 	echo "File "$(($NUM_FIRST_TASK+i))
-# # 	cd task_$(($NUM_FIRST_TASK+i))
-# # 	tar -zxf node${node_list[$i]}.tgz
-# # 	mv node${node_list[$i]}/*.bin ~/results/$result
-# # 	cd ..
-# # 	i=$(($i+1))
-# # done
+# Décompression des résultats et copie des fichiers
+# echo "Unzipping results and copying files"
+# cd ~/results
+# echo "Create folder: "$result
+# mkdir $result
+# i=0
+# while [ $i -lt $NB_NOEUDS ]; do
+# 	echo "File "$(($NUM_FIRST_TASK+i))
+# 	cd task_$(($NUM_FIRST_TASK+i))
+# 	tar -zxf node${node_list[$i]}.tgz
+# 	mv node${node_list[$i]}/*.bin ~/results/$result
+# 	cd ..
+# 	i=$(($i+1))
+# done
 
 # Récupération des résultats
 echo "Gathering result files in 10s"
@@ -86,6 +114,20 @@ sleep 10
 cd ~/results
 echo "Create folder: "$result
 mkdir $result
+
+
+echo Frequency:    ${freq} > $result/readme.txt
+echo Sample rate:  ${samp_rate} >> $result/readme.txt
+echo Image: ${docker_image} >> $result/readme.txt
+echo Duration:     ${duration} >> $result/readme.txt
+echo TX:     ${tx_list_string} >> $result/readme.txt
+echo RX:     ${rx_list_string} >> $result/readme.txt
+echo Sched:     ${sched_node} >> $result/readme.txt
+if [ $varying = "True" ]
+then echo Varying:     True     @ ${variation_freq}Hz >> $result/readme.txt
+else echo Varying:     False >> $result/readme.txt
+fi
+
 i=0
 while [ $i -lt ${#rx_node_list[@]} ]; do
 	echo "File "$(($NUM_FIRST_TASK+i))
