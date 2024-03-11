@@ -1,4 +1,5 @@
 .vscode/
+__pycache__
 build/
 examples/src/include/
 examples/src/lib/
