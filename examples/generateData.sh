@@ -93,21 +93,6 @@ do
 done
 echo "Tasks finished"
 
-# Décompression des résultats et copie des fichiers
-# echo "Unzipping results and copying files"
-# cd ~/results
-# echo "Create folder: "$result
-# mkdir $result
-# i=0
-# while [ $i -lt $NB_NOEUDS ]; do
-# 	echo "File "$(($NUM_FIRST_TASK+i))
-# 	cd task_$(($NUM_FIRST_TASK+i))
-# 	tar -zxf node${node_list[$i]}.tgz
-# 	mv node${node_list[$i]}/*.bin ~/results/$result
-# 	cd ..
-# 	i=$(($i+1))
-# done
-
 # Récupération des résultats
 echo "Gathering result files in 10s"
 sleep 10
