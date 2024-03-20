@@ -1,4 +1,4 @@
-FROM m1mbert/cxlb-gnuradio-3.10:1.2
+FROM ghcr.io/cortexlab/cxlb-gnuradio-3.10:1.3
 
 SHELL [ "/bin/bash", "-lc"  ]
 RUN git clone -b port3.10  https://github.com/Inria-Maracas/gr-txid.git
