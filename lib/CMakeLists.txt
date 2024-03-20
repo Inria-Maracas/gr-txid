@@ -14,6 +14,7 @@ include(GrPlatform) #define LIB_SUFFIX
 list(APPEND txid_sources
     head_impl.cc
     packet_isolator_c_impl.cc
+    packet_header_ofdm.cc
     correlator_impl.cc
 )
 
@@ -24,7 +25,7 @@ if(NOT txid_sources)
 endif(NOT txid_sources)
 
 add_library(gnuradio-txid SHARED ${txid_sources})
-target_link_libraries(gnuradio-txid gnuradio::gnuradio-runtime gnuradio::gnuradio-filter)
+target_link_libraries(gnuradio-txid gnuradio::gnuradio-runtime gnuradio::gnuradio-filter gnuradio::gnuradio-analog gnuradio::gnuradio-digital)
 target_include_directories(gnuradio-txid
     PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../include>
     PUBLIC $<INSTALL_INTERFACE:include>

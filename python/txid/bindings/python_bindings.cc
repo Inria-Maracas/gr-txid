@@ -24,6 +24,7 @@ namespace py = pybind11;
     void bind_head(py::module& m);
     void bind_packet_isolator_c(py::module& m);
     void bind_correlator(py::module& m);
+    void bind_packet_header_ofdm(py::module& m);
 // ) END BINDING_FUNCTION_PROTOTYPES
 
 
@@ -45,6 +46,7 @@ PYBIND11_MODULE(txid_python, m)
 
     // Allow access to base block methods
     py::module::import("gnuradio.gr");
+    py::module::import("gnuradio.digital");
 
     /**************************************/
     // The following comment block is used for
@@ -55,5 +57,6 @@ PYBIND11_MODULE(txid_python, m)
     bind_head(m);
     bind_packet_isolator_c(m);
     bind_correlator(m);
+    bind_packet_header_ofdm(m);
     // ) END BINDING_FUNCTION_CALLS
 }

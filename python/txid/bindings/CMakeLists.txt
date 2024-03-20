@@ -31,6 +31,7 @@ include(GrPybind)
 list(APPEND txid_python_files
     head_python.cc
     packet_isolator_c_python.cc
+    packet_header_ofdm_python.cc
     correlator_python.cc python_bindings.cc)
 
 GR_PYBIND_MAKE_OOT(txid

@@ -13,5 +13,6 @@ install(FILES
     api.h
     head.h
     packet_isolator_c.h
+    packet_header_ofdm.h
     correlator.h DESTINATION include/gnuradio/txid
 )
