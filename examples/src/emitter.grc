@@ -260,57 +260,6 @@ blocks:
     coordinate: [176, 1068.0]
     rotation: 0
     state: true
-- name: sizes
-  id: variable_struct
-  parameters:
-    comment: ''
-    field0: zpad
-    field1: preamble
-    field10: ''
-    field11: ''
-    field12: ''
-    field13: ''
-    field14: ''
-    field15: ''
-    field16: ''
-    field17: ''
-    field18: ''
-    field19: ''
-    field2: preambleGuard
-    field3: header
-    field4: headerGuard
-    field5: payload
-    field6: payloadGuard
-    field7: ''
-    field8: ''
-    field9: ''
-    value0: '3000'
-    value1: len(preamble)
-    value10: '0'
-    value11: '0'
-    value12: '0'
-    value13: '0'
-    value14: '0'
-    value15: '0'
-    value16: '0'
-    value17: '0'
-    value18: '0'
-    value19: '0'
-    value2: '40'
-    value3: '320'
-    value4: '100'
-    value5: '560'
-    value6: space_between_packets
-    value7: '0'
-    value8: '0'
-    value9: '0'
-  states:
-    bus_sink: false
-    bus_source: false
-    bus_structure: null
-    coordinate: [1288, 4.0]
-    rotation: 0
-    state: enabled
 - name: zpad
   id: variable
   parameters:
@@ -1373,7 +1322,7 @@ blocks:
     start_time: '-1.0'
     stream_args: ''
     stream_chans: '[]'
-    sync: sync
+    sync: none
     time_source0: ''
     time_source1: ''
     time_source2: ''

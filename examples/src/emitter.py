@@ -9,7 +9,6 @@
 # Author: Cyrille Morin
 # GNU Radio version: 3.10.9.2
 
-def struct(data): return type('Struct', (object,), data)()
 from gnuradio import analog
 from gnuradio import blocks
 from gnuradio import digital
@@ -64,35 +63,6 @@ class emitter(gr.top_block):
         self.chip_seq_A = chip_seq_A = (0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 1, 1)
         self.chip_seq_7 = chip_seq_7 = (1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0)
         self.chip_seq_0 = chip_seq_0 = (0,0,1,1,1,1,1,0,0,0,1,0,0,1,0,1)
-        self.sizes = sizes = struct({
-
-            'zpad': 3000,
-
-            'preamble': len(preamble),
-
-            'preambleGuard': 40,
-
-            'header': 320,
-
-            'headerGuard': 100,
-
-            'payload': 560,
-
-            'payloadGuard': space_between_packets,
-
-
-
-
-
-
-
-
-
-
-
-
-
-        })
         self.shr_field_chips = shr_field_chips = chip_seq_0 * 8 + chip_seq_7 + chip_seq_A
         self.qpsk = qpsk = digital.constellation_qpsk().base()
         self.qpsk.set_npwr(1.0)
@@ -117,7 +87,7 @@ class emitter(gr.top_block):
         )
         self.uhd_usrp_sink_0.set_clock_source('internal', 0)
         self.uhd_usrp_sink_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_sink_0.set_time_unknown_pps(uhd.time_spec(0))
+        # No synchronization enforced.
 
         self.uhd_usrp_sink_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_sink_0.set_antenna('TX/RX', 0)
@@ -177,8 +147,8 @@ class emitter(gr.top_block):
         self.msg_connect((self.txid_udp_trigger_0, 'out'), (self.pdu_pdu_to_tagged_stream_0, 'pdus'))
         self.connect((self.analog_noise_source_x_0, 0), (self.blocks_selector_0, 0))
         self.connect((self.analog_random_uniform_source_x_0, 0), (self.blocks_selector_1, 0))
-        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 0))
+        self.connect((self.analog_sig_source_x_0_0, 0), (self.blocks_float_to_complex_0, 1))
         self.connect((self.blocks_float_to_complex_0, 0), (self.blocks_repeat_0, 0))
         self.connect((self.blocks_multiply_const_xx_0, 0), (self.blocks_stream_mux_3, 3))
         self.connect((self.blocks_multiply_xx_0, 0), (self.blocks_stream_mux_4, 1))
@@ -361,12 +331,6 @@ class emitter(gr.top_block):
     def set_chip_seq_0(self, chip_seq_0):
         self.chip_seq_0 = chip_seq_0
         self.set_shr_field_chips(self.chip_seq_0 * 8 + self.chip_seq_7 + self.chip_seq_A)
-
-    def get_sizes(self):
-        return self.sizes
-
-    def set_sizes(self, sizes):
-        self.sizes = sizes
 
     def get_shr_field_chips(self):
         return self.shr_field_chips

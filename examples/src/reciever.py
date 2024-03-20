@@ -66,9 +66,8 @@ class reciever(gr.top_block):
                 channels=list(range(0,1)),
             ),
         )
-        self.uhd_usrp_source_0.set_clock_source('internal', 0)
         self.uhd_usrp_source_0.set_samp_rate(samp_rate)
-        self.uhd_usrp_source_0.set_time_unknown_pps(uhd.time_spec(0))
+        # No synchronization enforced.
 
         self.uhd_usrp_source_0.set_center_freq(center_freq, 0)
         self.uhd_usrp_source_0.set_antenna('TX/RX', 0)
@@ -76,15 +75,17 @@ class reciever(gr.top_block):
         self.txid_record_payload_0 = txid.record_payload(tx_amount, file, ((preamble_guard_len//2)-1+header_len+header_guard_len-20), 600, False, '127.0.0.1', 3581, nb_payloads_to_save)
         self.txid_packet_isolator_c_0 = txid.packet_isolator_c(((preamble_guard_len//2)-1+header_len+header_guard_len+payload_len+payload_guard_len//2), (preamble_len+(preamble_guard_len//2)+1), 200, "corr_est")
         self.txid_packet_isolator_c_0.set_min_output_buffer(2000)
-        self.txid_correlator_0 = txid.correlator(preamble, 1, 0, 0.3, digital.THRESHOLD_ABSOLUTE)
-        self.digital_ofdm_rx_0 = digital.ofdm_rx(
+        self.txid_ofdm_rx_0 = txid.ofdm_rx(
             fft_len=64, cp_len=16,
-            frame_length_tag_key='frame_'+"rx_len",
-            packet_length_tag_key="rx_len",
+            frame_length_tag_key='frame_'+"length",
+            packet_length_tag_key="length",
+            sc_thresh=0.9,
             bps_header=1,
             bps_payload=1,
             debug_log=False,
-            scramble_bits=True)
+            scramble_bits=True,
+            check_len=(5+4))
+        self.txid_correlator_0 = txid.correlator(preamble, 1, 0, 0.3, digital.THRESHOLD_ABSOLUTE)
         self.blocks_skiphead_0 = blocks.skiphead(gr.sizeof_gr_complex*1, 1000000)
 
 
@@ -92,9 +93,9 @@ class reciever(gr.top_block):
         # Connections
         ##################################################
         self.connect((self.blocks_skiphead_0, 0), (self.txid_correlator_0, 0))
-        self.connect((self.digital_ofdm_rx_0, 0), (self.txid_record_payload_0, 0))
         self.connect((self.txid_correlator_0, 0), (self.txid_packet_isolator_c_0, 0))
-        self.connect((self.txid_packet_isolator_c_0, 0), (self.digital_ofdm_rx_0, 0))
+        self.connect((self.txid_ofdm_rx_0, 0), (self.txid_record_payload_0, 0))
+        self.connect((self.txid_packet_isolator_c_0, 0), (self.txid_ofdm_rx_0, 0))
         self.connect((self.txid_packet_isolator_c_0, 0), (self.txid_record_payload_0, 1))
         self.connect((self.uhd_usrp_source_0, 0), (self.blocks_skiphead_0, 0))
 
